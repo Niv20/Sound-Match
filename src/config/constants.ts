@@ -83,12 +83,12 @@ export const DEFAULT_SETTINGS = {
   negativeScore: true,
   /** טעות מרובה: לאחר טעות אפשר לנסות שוב אחרי שנייה (כבוי => נפסל לשארית הסבב) */
   multiMistake: true,
-  winningScore: 10,
+  winningScore: 5,
 } as const;
 
 /** טווח יעד הניצחון שניתן לבחור בהגדרות */
 export const WINNING_SCORE_MIN = 3;
-export const WINNING_SCORE_MAX = 30;
+export const WINNING_SCORE_MAX = 10;
 
 /** קטגוריית מספרים: גבולות הטווח המותר */
 export const NUMBERS_ABS_MIN = 0;
