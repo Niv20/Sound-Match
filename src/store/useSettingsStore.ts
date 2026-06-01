@@ -7,6 +7,7 @@ interface SettingsState {
   sfx: { on: boolean; volume: number };
   arabic: boolean;
   negativeScore: boolean;
+  multiMistake: boolean;
   winningScore: number;
 
   setMusicOn: (on: boolean) => void;
@@ -15,6 +16,7 @@ interface SettingsState {
   setSfxVolume: (v: number) => void;
   setArabic: (on: boolean) => void;
   setNegativeScore: (on: boolean) => void;
+  setMultiMistake: (on: boolean) => void;
   setWinningScore: (n: number) => void;
 }
 
@@ -27,6 +29,7 @@ export const useSettingsStore = create<SettingsState>()(
       sfx: { ...DEFAULT_SETTINGS.sfx },
       arabic: DEFAULT_SETTINGS.arabic,
       negativeScore: DEFAULT_SETTINGS.negativeScore,
+      multiMistake: DEFAULT_SETTINGS.multiMistake,
       winningScore: DEFAULT_SETTINGS.winningScore,
 
       setMusicOn: (on) => set((s) => ({ music: { ...s.music, on } })),
@@ -35,6 +38,7 @@ export const useSettingsStore = create<SettingsState>()(
       setSfxVolume: (v) => set((s) => ({ sfx: { ...s.sfx, volume: clamp01(v) } })),
       setArabic: (on) => set({ arabic: on }),
       setNegativeScore: (on) => set({ negativeScore: on }),
+      setMultiMistake: (on) => set({ multiMistake: on }),
       setWinningScore: (n) =>
         set({ winningScore: Math.max(WINNING_SCORE_MIN, Math.min(WINNING_SCORE_MAX, Math.round(n))) }),
     }),

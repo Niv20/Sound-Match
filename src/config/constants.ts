@@ -4,13 +4,44 @@
    =========================================================================== */
 
 /** מקשי השחקנים */
-export const KEY_P1 = 'a'; // שחקן כחול
-export const KEY_P2 = 'l'; // שחקן אדום
+export const KEY_P1 = 'a'; // צד ימין (כחול)
+export const KEY_P2 = 'l'; // צד שמאל (ירוק)
 
 /** זיהוי שחקנים */
 export const PLAYER1 = 'p1' as const;
 export const PLAYER2 = 'p2' as const;
 export type PlayerId = typeof PLAYER1 | typeof PLAYER2;
+
+/* ===========================================================================
+   SIDES — הגדרה מרכזית של כל צד: צד פיזי במסך (RTL), התו (סמל), והצבע.
+   זה המקום היחיד שקובע את צבע/תו של כל צד. שנה כאן בלבד.
+     • צד ימין (PLAYER1) — כחול
+     • צד שמאל (PLAYER2) — ירוק
+   הצבעים עצמם (hex) מוגדרים ב-theme.css כמשתני CSS.
+   =========================================================================== */
+export const SIDES = {
+  [PLAYER1]: {
+    /** צד פיזי במסך (RTL: השחקן הראשון נמצא מימין) */
+    edge: 'right' as const,
+    /** התו של הצד — כרגע אות המקש (נשאר כפי שהיה) */
+    symbol: KEY_P1,
+    /** משתנה הצבע של הצד */
+    color: 'var(--c-player1)',
+    colorDark: 'var(--c-player1-dark)',
+    /** הילה בהירה (זוהר ניצחון) */
+    glow: '#9dc0ff',
+    /** שם הצבע בעברית (לכותרות "השחקן ה___") */
+    colorWord: 'כחול',
+  },
+  [PLAYER2]: {
+    edge: 'left' as const,
+    symbol: KEY_P2,
+    color: 'var(--c-player2)',
+    colorDark: 'var(--c-player2-dark)',
+    glow: '#9be7c4',
+    colorWord: 'ירוק',
+  },
+} as const;
 
 /** מסיחי דעת: כמה מילים שגויות מושמעות לפני המילה הנכונה (כולל הקצוות) */
 export const MIN_DISTRACTORS = 1;
@@ -28,6 +59,10 @@ export const TIMINGS = {
   OPPORTUNITY_WINDOW: 2600,
   /** השהיה קצרה לפני מסך החשיפה (Reveal) */
   RESOLVE_DELAY: 500,
+  /** משך הבזק "תשובה נכונה" על צד המנצח לפני המעבר למסך החשיפה */
+  CORRECT_FLASH: 1000,
+  /** השהיה עד ששחקן יכול לנסות שוב אחרי טעות (במצב "טעות מרובה") */
+  MISTAKE_RECOVER: 1000,
 } as const;
 
 /** ניקוד */
@@ -46,6 +81,8 @@ export const DEFAULT_SETTINGS = {
   sfx: { on: true, volume: 0.85 },
   arabic: true,
   negativeScore: true,
+  /** טעות מרובה: לאחר טעות אפשר לנסות שוב אחרי שנייה (כבוי => נפסל לשארית הסבב) */
+  multiMistake: true,
   winningScore: 10,
 } as const;
 

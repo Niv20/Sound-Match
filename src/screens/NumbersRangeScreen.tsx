@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import NumberFlow from '@number-flow/react';
 import { motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
-import { NUMBERS_ABS_MIN, NUMBERS_ABS_MAX } from '../config/constants';
 import { buildNumberItems, validateRange, clampNumber } from '../data/numbers';
 import { useNavStore } from '../store/useNavStore';
 import { useSelectionStore } from '../store/useSelectionStore';
@@ -24,15 +24,11 @@ function Stepper({
       <span style={{ fontWeight: 700, color: 'var(--c-ink-soft)' }}>{label}</span>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <Button variant="soft" icon="remove" onClick={() => onChange(clampNumber(value - 1))} ariaLabel="הפחת" />
-        <input
-          type="number"
-          value={value}
-          min={NUMBERS_ABS_MIN}
-          max={NUMBERS_ABS_MAX}
-          onChange={(e) => onChange(clampNumber(parseInt(e.target.value, 10)))}
+        <div
           style={{
             width: 110,
-            textAlign: 'center',
+            display: 'grid',
+            placeItems: 'center',
             fontFamily: 'var(--font-display)',
             fontSize: 44,
             color: 'var(--c-primary)',
@@ -41,7 +37,9 @@ function Stepper({
             borderRadius: 'var(--r-md)',
             padding: '6px 0',
           }}
-        />
+        >
+          <NumberFlow value={value} />
+        </div>
         <Button variant="soft" icon="add" onClick={() => onChange(clampNumber(value + 1))} ariaLabel="הוסף" />
       </div>
     </div>
@@ -83,8 +81,8 @@ export function NumbersRangeScreen() {
 
       <div style={{ minHeight: 30 }}>
         {validation.valid ? (
-          <span style={{ color: 'var(--c-accent-2)', fontWeight: 700 }}>
-            {max - min + 1} מספרים בטווח
+          <span style={{ color: 'var(--c-accent-2)', fontWeight: 700, display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
+            <NumberFlow value={max - min + 1} /> מספרים בטווח
           </span>
         ) : (
           <motion.span

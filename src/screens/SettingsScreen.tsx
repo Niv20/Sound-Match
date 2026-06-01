@@ -1,3 +1,4 @@
+import NumberFlow from '@number-flow/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
@@ -70,15 +71,20 @@ export function SettingsScreen() {
           <Toggle on={s.arabic} onChange={s.setArabic} ariaLabel="ערבית" />
         </Row>
 
-        <Row icon="exposure_neg_1" label="ניקוד שלילי" hint="לחיצה שגויה / חוסר תגובה מורידה נקודה">
-          <Toggle on={s.negativeScore} onChange={s.setNegativeScore} ariaLabel="ניקוד שלילי" />
+        <Row icon="exposure_neg_1" label="הורדת נקודה על טעות" hint="כל טעות מורידה נקודה (אי אפשר לרדת מתחת ל-0)">
+          <Toggle on={s.negativeScore} onChange={s.setNegativeScore} ariaLabel="הורדת נקודה על טעות" />
+        </Row>
+
+        <Row icon="restart_alt" label="טעות מרובה" hint="אחרי טעות אפשר לנסות שוב (כבוי: נפסל לשארית הסבב)">
+          <Toggle on={s.multiMistake} onChange={s.setMultiMistake} ariaLabel="טעות מרובה" />
         </Row>
 
         <Row icon="emoji_events" label="יעד ניצחון" hint="כמה נקודות כדי לזכות">
           <Button variant="soft" icon="remove" onClick={() => s.setWinningScore(s.winningScore - 1)} ariaLabel="הפחת" />
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 44, textAlign: 'center' }}>
-            {s.winningScore}
-          </span>
+          <NumberFlow
+            value={s.winningScore}
+            style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 44, textAlign: 'center' }}
+          />
           <Button variant="soft" icon="add" onClick={() => s.setWinningScore(s.winningScore + 1)} ariaLabel="הוסף" />
         </Row>
 

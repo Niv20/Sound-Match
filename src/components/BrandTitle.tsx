@@ -14,7 +14,7 @@ export function BrandTitle({ small }: { small?: boolean }) {
         fontSize: small ? 'clamp(26px, 4vw, 40px)' : 'clamp(44px, 9vw, 92px)',
         lineHeight: 1,
         letterSpacing: '0.5px',
-        background: 'linear-gradient(120deg, var(--c-primary), var(--c-player2) 50%, var(--c-accent))',
+        background: 'linear-gradient(120deg, var(--c-primary), var(--c-danger) 50%, var(--c-accent))',
         WebkitBackgroundClip: 'text',
         backgroundClip: 'text',
         color: 'transparent',

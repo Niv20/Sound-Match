@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
-import { KEY_P1, KEY_P2 } from '../config/constants';
+import { PLAYER1, PLAYER2, SIDES } from '../config/constants';
 import { useNavStore } from '../store/useNavStore';
 import { useScreenMusic } from '../hooks/useScreenMusic';
 
@@ -26,30 +26,30 @@ export function InstructionsScreen() {
 
       {/* מקשי השחקנים */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 30 }}>
-        {[
-          { k: KEY_P1, label: 'שחקן כחול', color: 'var(--c-player1)' },
-          { k: KEY_P2, label: 'שחקן אדום', color: 'var(--c-player2)' },
-        ].map((p) => (
-          <div key={p.k} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-            <div
-              style={{
-                width: 64,
-                height: 64,
-                borderRadius: 16,
-                background: p.color,
-                color: '#fff',
-                display: 'grid',
-                placeItems: 'center',
-                fontFamily: 'var(--font-display)',
-                fontSize: 34,
-                boxShadow: 'var(--sh-md)',
-              }}
-            >
-              {p.k.toUpperCase()}
+        {[PLAYER1, PLAYER2].map((player) => {
+          const side = SIDES[player];
+          return (
+            <div key={player} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+              <div
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 16,
+                  background: side.color,
+                  color: '#fff',
+                  display: 'grid',
+                  placeItems: 'center',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 34,
+                  boxShadow: 'var(--sh-md)',
+                }}
+              >
+                {side.symbol.toUpperCase()}
+              </div>
+              <span style={{ fontWeight: 700, color: side.color }}>שחקן {side.colorWord}</span>
             </div>
-            <span style={{ fontWeight: 700, color: p.color }}>{p.label}</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* שלבים */}

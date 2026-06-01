@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
+import { PLAYER1, PLAYER2, SIDES } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
 import { useNavStore } from '../store/useNavStore';
 import { musicManager } from '../audio/MusicManager';
@@ -18,8 +19,9 @@ export function VictoryScreen() {
   const openCategories = useNavStore((s) => s.openCategories);
 
   const p1Won = scores.p1 >= scores.p2;
-  const color = p1Won ? 'var(--c-player1)' : 'var(--c-player2)';
-  const name = p1Won ? 'השחקן הכחול' : 'השחקן האדום';
+  const winner = p1Won ? PLAYER1 : PLAYER2;
+  const color = SIDES[winner].color;
+  const name = `השחקן ה${SIDES[winner].colorWord}`;
 
   useEffect(() => {
     sfx('victory');
@@ -61,14 +63,14 @@ export function VictoryScreen() {
       </h1>
 
       <div style={{ display: 'flex', gap: 40, alignItems: 'center' }}>
-        <div style={{ textAlign: 'center', color: 'var(--c-player1)' }}>
+        <div style={{ textAlign: 'center', color: SIDES[PLAYER1].color }}>
           <NumberFlow value={scores.p1} style={{ fontFamily: 'var(--font-display)', fontSize: 64 }} />
-          <div style={{ fontWeight: 700 }}>כחול</div>
+          <div style={{ fontWeight: 700 }}>{SIDES[PLAYER1].colorWord}</div>
         </div>
         <span style={{ fontSize: 40, color: 'var(--c-ink-soft)' }}>:</span>
-        <div style={{ textAlign: 'center', color: 'var(--c-player2)' }}>
+        <div style={{ textAlign: 'center', color: SIDES[PLAYER2].color }}>
           <NumberFlow value={scores.p2} style={{ fontFamily: 'var(--font-display)', fontSize: 64 }} />
-          <div style={{ fontWeight: 700 }}>אדום</div>
+          <div style={{ fontWeight: 700 }}>{SIDES[PLAYER2].colorWord}</div>
         </div>
       </div>
 
