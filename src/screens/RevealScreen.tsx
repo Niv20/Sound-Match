@@ -4,7 +4,7 @@ import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { PlayerPanel } from '../components/PlayerPanel';
 import { TargetDisplay } from '../components/TargetDisplay';
-import { LANG_HE, LANG_AR, PLAYER1, PLAYER2, SIDES, SCORING, type PlayerId } from '../config/constants';
+import { LANG_HE, LANG_AR, PLAYER1, PLAYER2, SIDES, SCORING, type PlayerId, type Lang } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { ttsManager } from '../audio/TtsManager';
@@ -105,14 +105,8 @@ export function RevealScreen() {
     const wait = (ms: number) => new Promise<void>((r) => timers.push(setTimeout(r, ms)));
 
     void (async () => {
-      // שלב הלימוד: ערבית (אם מופעל) ואז עברית
-      if (arabicOn) {
-        await ttsManager.playWord(target.id, LANG_AR);
-        if (cancelled) return;
-        await wait(350);
-        if (cancelled) return;
-      }
-      await ttsManager.playWord(target.id, LANG_HE);
+      // שלב הלימוד: מקריאים רק בערבית (אם מופעל), אחרת רק בעברית — בלי כפל שפות.
+      await ttsManager.playWord(target.id, arabicOn ? LANG_AR : LANG_HE);
       if (cancelled) return;
 
       // מכניסים את שני הניקודים מהקצוות
@@ -140,34 +134,60 @@ export function RevealScreen() {
 
   if (!target || !result) return null;
 
+  /** לחיצה על מילה מקריאה אותה בשפה המתאימה. */
+  const speak = (lang: Lang) => {
+    void ttsManager.playWord(target.id, lang);
+  };
+
   return (
     <Screen style={{ alignItems: 'center', justifyContent: 'center', gap: 18 }}>
       {/* יציאה מהמשחק — זמינה רק בסוף הסבב */}
       <div style={{ position: 'absolute', top: 'clamp(16px,3vw,40px)', insetInlineStart: 'clamp(16px,3vw,40px)' }}>
-        <Button variant="ghost" icon="logout" onClick={exit} ariaLabel="יציאה מהמשחק" />
+        <Button variant="ghost" icon="logout" onClick={exit}>
+          יציאה מהמשחק
+        </Button>
       </div>
 
       <div style={{ transform: 'scale(0.7)' }}>
         <TargetDisplay item={target} />
       </div>
 
-      {/* המילה בעברית — מוסתרת למספרים כי הספרה כבר מוצגת ב-TargetDisplay */}
+      {/* המילה — ערבית למעלה (סגול), עברית למטה (שחור). לחיצה מקריאה בשפה המתאימה.
+          מוסתרת למספרים כי הספרה כבר מוצגת ב-TargetDisplay. */}
       {target.categoryId !== 'numbers' && (
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px,6vw,64px)', color: 'var(--c-ink)' }}>
-            {target.he}
-          </span>
           {arabicOn && (
-            <motion.span
+            <motion.button
+              type="button"
+              onClick={() => speak(LANG_AR)}
+              whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
               dir="rtl"
-              style={{ fontSize: 'clamp(26px,4.5vw,44px)', color: 'var(--c-primary)', fontWeight: 700 }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(34px,6vw,64px)',
+                fontWeight: 700,
+                color: 'var(--c-primary)',
+                padding: 0,
+              }}
             >
               {arabicText(target.id, target.he)}
-            </motion.span>
+            </motion.button>
           )}
+          <motion.button
+            type="button"
+            onClick={() => speak(LANG_HE)}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(26px,4.5vw,44px)',
+              color: 'var(--c-ink)',
+              padding: 0,
+            }}
+          >
+            {target.he}
+          </motion.button>
         </div>
       )}
 
