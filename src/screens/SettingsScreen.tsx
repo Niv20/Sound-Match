@@ -4,7 +4,12 @@ import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
 import { Toggle } from '../components/Toggle';
 import { Slider } from '../components/Slider';
-import { WINNING_SCORE_MIN, WINNING_SCORE_MAX } from '../config/constants';
+import {
+  WINNING_SCORE_MIN,
+  WINNING_SCORE_MAX,
+  WORD_INTERVAL_MIN,
+  WORD_INTERVAL_MAX,
+} from '../config/constants';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useNavStore } from '../store/useNavStore';
 import { useScreenMusic } from '../hooks/useScreenMusic';
@@ -84,8 +89,28 @@ export function SettingsScreen() {
           <Button variant="soft" icon="add" onClick={() => s.setWinningScore(s.winningScore + 1)} ariaLabel="הוסף" />
         </Row>
 
+        <Row icon="timer" label="קצב הקראת המילים" hint="כמה שניות בין מילה למילה בסבב">
+          <Button
+            variant="soft"
+            icon="remove"
+            onClick={() => s.setWordIntervalSec(s.wordIntervalSec - 1)}
+            ariaLabel="הפחת"
+          />
+          <NumberFlow
+            value={s.wordIntervalSec}
+            suffix=" שנ׳"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 72, textAlign: 'center' }}
+          />
+          <Button
+            variant="soft"
+            icon="add"
+            onClick={() => s.setWordIntervalSec(s.wordIntervalSec + 1)}
+            ariaLabel="הוסף"
+          />
+        </Row>
+
         <div style={{ textAlign: 'center', color: 'var(--c-ink-soft)', fontSize: 13 }}>
-          טווח יעד: {WINNING_SCORE_MIN}–{WINNING_SCORE_MAX}
+          טווח יעד: {WINNING_SCORE_MIN}–{WINNING_SCORE_MAX} · קצב הקראה: {WORD_INTERVAL_MIN}–{WORD_INTERVAL_MAX} שנ׳
         </div>
       </div>
     </Screen>

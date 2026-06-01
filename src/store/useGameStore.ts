@@ -106,12 +106,13 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (stale()) return;
 
       // שלב המסיחים
+      const wordGap = useSettingsStore.getState().wordIntervalSec * 1000;
       set({ phase: 'distractors' });
       for (const d of plan.distractors) {
         if (stale()) return;
         await ttsManager.playWord(d.id, 'he');
         if (stale()) return;
-        await wait(TIMINGS.WORD_GAP);
+        await wait(wordGap);
       }
       if (stale()) return;
 

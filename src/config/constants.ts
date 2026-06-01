@@ -51,8 +51,6 @@ export const MAX_DISTRACTORS = 5;
 export const TIMINGS = {
   /** השהיה אחרי הופעת התמונה לפני שמתחילים להקריא מילים */
   PRESENT_DELAY: 900,
-  /** מרווח בין סוף מילה מושמעת להתחלת הבאה */
-  WORD_GAP: 550,
   /** הערכה גסה לאורך השמעת מילה (משמש כ-fallback אם אורך האודיו לא ידוע) */
   WORD_FALLBACK_DURATION: 850,
   /** משך חלון ההזדמנות אחרי שהמילה הנכונה הושמעה */
@@ -83,11 +81,17 @@ export const DEFAULT_SETTINGS = {
   /** טעות מרובה: לאחר טעות אפשר לנסות שוב אחרי שנייה (כבוי => נפסל לשארית הסבב) */
   multiMistake: true,
   winningScore: 5,
+  /** מרווח (בשניות) בין סוף מילה מושמעת בסבב להתחלת הבאה */
+  wordIntervalSec: 2,
 } as const;
 
 /** טווח יעד הניצחון שניתן לבחור בהגדרות */
 export const WINNING_SCORE_MIN = 3;
 export const WINNING_SCORE_MAX = 10;
+
+/** טווח המרווח (בשניות) בין מילים שניתן לבחור בהגדרות */
+export const WORD_INTERVAL_MIN = 1;
+export const WORD_INTERVAL_MAX = 5;
 
 /** קטגוריית מספרים: גבולות הטווח המותר */
 export const NUMBERS_ABS_MIN = 0;
