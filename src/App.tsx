@@ -68,6 +68,11 @@ export function App() {
     const thumbs = CATEGORIES.flatMap((c) => imageItems(c.id).slice(0, 1).map((it) => it.image));
     preloadIdle(thumbs);
 
+    // נוחות פיתוח: כניסה ישירה למסך לפי hash (למשל #categories)
+    if (import.meta.env.DEV && location.hash.slice(1) === 'categories') {
+      useNavStore.getState().openCategories();
+    }
+
     const unlock = () => void audioEngine.resume();
     window.addEventListener('pointerdown', unlock);
     window.addEventListener('keydown', unlock);

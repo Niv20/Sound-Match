@@ -18,7 +18,9 @@ export function CategoryItemsScreen() {
   const sfx = useSfx();
   const categoryId = useNavStore((s) => s.categoryId)!;
   const subgroup = useNavStore((s) => s.subgroup);
-  const goBack = useNavStore((s) => (subgroup ? () => s.selectCategory(categoryId) : s.openCategories));
+  const selectCategory = useNavStore((s) => s.selectCategory);
+  const openCategories = useNavStore((s) => s.openCategories);
+  const goBack = () => (subgroup ? selectCategory(categoryId) : openCategories());
 
   const cat = CATEGORY_BY_ID[categoryId];
   const scope = scopeKey(categoryId, subgroup ?? undefined);

@@ -35,7 +35,7 @@ export const CATEGORIES: CategoryDef[] = [
       { id: 'wild', he: 'חַיּוֹת בָּר', icon: 'forest' },
       { id: 'farm', he: 'חַיּוֹת מֶשֶׁק', icon: 'agriculture' },
       { id: 'sea', he: 'חַיּוֹת יָם', icon: 'water' },
-      { id: 'birds', he: 'צִפּוֹרִים', icon: 'raven' },
+      { id: 'birds', he: 'צִפּוֹרִים', icon: 'flutter_dash' },
     ],
   },
   { id: 'colors', he: 'צְבָעִים', type: 'colors', icon: 'palette', color: '#ff6fb5' },

@@ -53,7 +53,7 @@ export function VictoryScreen() {
         animate={{ scale: 1, rotate: 0 }}
         transition={{ type: 'spring', stiffness: 200, damping: 12 }}
       >
-        <Icon name="crown" size={120} style={{ color: 'var(--c-accent)' }} />
+        <Icon name="workspace_premium" size={120} style={{ color: 'var(--c-accent)' }} />
       </motion.div>
 
       <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(34px,6vw,64px)', color }}>
