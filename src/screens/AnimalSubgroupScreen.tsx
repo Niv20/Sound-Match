@@ -16,14 +16,26 @@ export function AnimalSubgroupScreen() {
   const openCategories = useNavStore((s) => s.openCategories);
 
   return (
-    <Screen style={{ gap: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Button variant="ghost" icon="arrow_forward" onClick={openCategories} ariaLabel="חזרה" />
-        <Icon name={cat.icon} size={34} style={{ color: cat.color }} />
-        <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(22px,3vw,34px)' }}>
-          איזה סוג חיות?
-        </h2>
-      </div>
+    <Screen>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 24,
+          maxWidth: 760,
+          width: '100%',
+          margin: '0 auto',
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Button variant="ghost" icon="arrow_forward" onClick={openCategories} ariaLabel="חזרה" />
+          <Icon name={cat.icon} size={34} style={{ color: cat.color }} />
+          <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(22px,3vw,34px)' }}>
+            איזה סוג חיות?
+          </h2>
+        </div>
 
       <div
         style={{
@@ -32,9 +44,6 @@ export function AnimalSubgroupScreen() {
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: 'clamp(12px,2vw,24px)',
           alignContent: 'center',
-          maxWidth: 760,
-          margin: '0 auto',
-          width: '100%',
         }}
       >
         {cat.subgroups!.map((sg, i) => {
@@ -71,6 +80,7 @@ export function AnimalSubgroupScreen() {
             </motion.button>
           );
         })}
+      </div>
       </div>
     </Screen>
   );

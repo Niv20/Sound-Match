@@ -37,13 +37,25 @@ export function SettingsScreen() {
   const s = useSettingsStore();
 
   return (
-    <Screen style={{ gap: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Button variant="ghost" icon="arrow_forward" onClick={back} ariaLabel="חזרה" />
-        <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(24px,4vw,36px)' }}>הגדרות</h2>
-      </div>
+    <Screen>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 12,
+          maxWidth: 620,
+          width: '100%',
+          margin: '0 auto',
+          flex: 1,
+          minHeight: 0,
+          overflowY: 'auto',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
+          <Button variant="ghost" icon="arrow_forward" onClick={back} ariaLabel="חזרה" />
+          <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(24px,4vw,36px)' }}>הגדרות</h2>
+        </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 620, width: '100%', margin: '0 auto', overflowY: 'auto' }}>
         <Row icon="music_note" label="מוזיקת רקע">
           {s.music.on && <Slider value={s.music.volume} onChange={s.setMusicVolume} />}
           <Toggle on={s.music.on} onChange={s.setMusicOn} ariaLabel="מוזיקה" />

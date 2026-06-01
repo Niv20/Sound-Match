@@ -40,82 +40,95 @@ export function CategoryItemsScreen() {
   const subName = subgroup ? cat.subgroups?.find((s) => s.id === subgroup)?.he : null;
 
   return (
-    <Screen style={{ gap: 16 }}>
-      {/* כותרת */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Button variant="ghost" icon="arrow_forward" onClick={goBack} ariaLabel="חזרה" />
-        <Icon name={cat.icon} size={34} style={{ color: cat.color }} />
-        <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(22px,3vw,34px)' }}>
-          {subName ?? cat.he}
-        </h2>
-        <span style={{ color: 'var(--c-ink-soft)', fontWeight: 700 }}>
-          {active.length}/{items.length}
-        </span>
-        <div style={{ marginInlineStart: 'auto' }}>
-          <Button variant="soft" icon="select_all" onClick={() => enableAll(scope)}>
-            הפעל הכל
-          </Button>
+    <Screen>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+          maxWidth: 960,
+          width: '100%',
+          margin: '0 auto',
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
+        {/* כותרת */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Button variant="ghost" icon="arrow_forward" onClick={goBack} ariaLabel="חזרה" />
+          <Icon name={cat.icon} size={34} style={{ color: cat.color }} />
+          <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(22px,3vw,34px)' }}>
+            {subName ?? cat.he}
+          </h2>
+          <span style={{ color: 'var(--c-ink-soft)', fontWeight: 700 }}>
+            {active.length}/{items.length}
+          </span>
+          <div style={{ marginInlineStart: 'auto' }}>
+            <Button variant="soft" icon="select_all" onClick={() => enableAll(scope)}>
+              הפעל הכל
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* רשת פריטים */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: 4 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
-            gap: 'clamp(8px,1.4vw,16px)',
-          }}
-        >
-          {items.map((it) => (
-            <ItemCard
-              key={it.id}
-              item={it}
-              active={!(disabled[scope] ?? []).includes(it.id)}
-              onToggle={() => {
-                sfx('item_toggle');
-                toggleItem(scope, it.id);
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* הודעה חכמה כשאין מספיק פריטים */}
-      <AnimatePresence>
-        {!canPlay && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+        {/* רשת פריטים */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: 4 }}>
+          <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              padding: '10px 16px',
-              borderRadius: 'var(--r-pill)',
-              background: 'var(--c-accent)',
-              color: 'var(--c-ink)',
-              fontWeight: 700,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+              gap: 'clamp(8px,1.4vw,16px)',
             }}
           >
-            <Icon name="warning" size={22} />
-            צריך להפעיל לפחות {MIN_ACTIVE_ITEMS} פריטים כדי לשחק
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {items.map((it) => (
+              <ItemCard
+                key={it.id}
+                item={it}
+                active={!(disabled[scope] ?? []).includes(it.id)}
+                onToggle={() => {
+                  sfx('item_toggle');
+                  toggleItem(scope, it.id);
+                }}
+              />
+            ))}
+          </div>
+        </div>
 
-      {/* התחלת משחק */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Button
-          big
-          icon="sports_esports"
-          disabled={!canPlay}
-          onClick={() => startMatch(active, categoryId, subgroup)}
-        >
-          התחל משחק
-        </Button>
+        {/* הודעה חכמה כשאין מספיק פריטים */}
+        <AnimatePresence>
+          {!canPlay && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                padding: '10px 16px',
+                borderRadius: 'var(--r-pill)',
+                background: 'var(--c-accent)',
+                color: 'var(--c-ink)',
+                fontWeight: 700,
+              }}
+            >
+              <Icon name="warning" size={22} />
+              צריך להפעיל לפחות {MIN_ACTIVE_ITEMS} פריטים כדי לשחק
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* התחלת משחק */}
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            big
+            icon="sports_esports"
+            disabled={!canPlay}
+            onClick={() => startMatch(active, categoryId, subgroup)}
+          >
+            התחל משחק
+          </Button>
+        </div>
       </div>
     </Screen>
   );
