@@ -114,10 +114,6 @@ export const useGameStore = create<GameState>((set, get) => ({
       void ttsManager.playWord(plan.target.id, 'he');
 
       const windowMs = dur + TIMINGS.OPPORTUNITY_WINDOW;
-      // תקתוק שעון לקראת הסוף
-      later(() => {
-        if (!stale()) sfxManager.play('clock_tick');
-      }, Math.max(0, windowMs - TIMINGS.CLOCK_TICK_BEFORE_END));
       // סוף החלון ללא לחיצה תקפה => timeout
       later(() => {
         if (stale()) return;
@@ -131,7 +127,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (phase === 'resolved' || phase === 'idle') return;
     if (blocked[player]) return;
 
-    sfxManager.play(player === PLAYER1 ? 'press_p1' : 'press_p2');
+    sfxManager.play('press');
 
     if (phase === 'opportunity') {
       resolveRound('correct', player);

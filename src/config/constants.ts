@@ -26,8 +26,6 @@ export const TIMINGS = {
   WORD_FALLBACK_DURATION: 850,
   /** משך חלון ההזדמנות אחרי שהמילה הנכונה הושמעה */
   OPPORTUNITY_WINDOW: 2600,
-  /** מתי להתחיל תקתוק שעון לפני סוף החלון */
-  CLOCK_TICK_BEFORE_END: 1500,
   /** השהיה קצרה לפני מסך החשיפה (Reveal) */
   RESOLVE_DELAY: 500,
 } as const;
