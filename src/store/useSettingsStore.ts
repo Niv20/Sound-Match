@@ -5,7 +5,6 @@ import { DEFAULT_SETTINGS, WINNING_SCORE_MIN, WINNING_SCORE_MAX } from '../confi
 interface SettingsState {
   music: { on: boolean; volume: number };
   sfx: { on: boolean; volume: number };
-  arabic: boolean;
   negativeScore: boolean;
   multiMistake: boolean;
   winningScore: number;
@@ -14,7 +13,6 @@ interface SettingsState {
   setMusicVolume: (v: number) => void;
   setSfxOn: (on: boolean) => void;
   setSfxVolume: (v: number) => void;
-  setArabic: (on: boolean) => void;
   setNegativeScore: (on: boolean) => void;
   setMultiMistake: (on: boolean) => void;
   setWinningScore: (n: number) => void;
@@ -27,7 +25,6 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       music: { ...DEFAULT_SETTINGS.music },
       sfx: { ...DEFAULT_SETTINGS.sfx },
-      arabic: DEFAULT_SETTINGS.arabic,
       negativeScore: DEFAULT_SETTINGS.negativeScore,
       multiMistake: DEFAULT_SETTINGS.multiMistake,
       winningScore: DEFAULT_SETTINGS.winningScore,
@@ -36,7 +33,6 @@ export const useSettingsStore = create<SettingsState>()(
       setMusicVolume: (v) => set((s) => ({ music: { ...s.music, volume: clamp01(v) } })),
       setSfxOn: (on) => set((s) => ({ sfx: { ...s.sfx, on } })),
       setSfxVolume: (v) => set((s) => ({ sfx: { ...s.sfx, volume: clamp01(v) } })),
-      setArabic: (on) => set({ arabic: on }),
       setNegativeScore: (on) => set({ negativeScore: on }),
       setMultiMistake: (on) => set({ multiMistake: on }),
       setWinningScore: (n) =>

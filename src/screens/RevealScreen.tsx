@@ -6,7 +6,6 @@ import { PlayerPanel } from '../components/PlayerPanel';
 import { TargetDisplay } from '../components/TargetDisplay';
 import { LANG_HE, LANG_AR, PLAYER1, PLAYER2, SIDES, SCORING, type PlayerId, type Lang } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
-import { useSettingsStore } from '../store/useSettingsStore';
 import { ttsManager } from '../audio/TtsManager';
 import { arabicText } from '../data/arabic';
 import { useSfx } from '../hooks/useSfx';
@@ -82,7 +81,6 @@ export function RevealScreen() {
   const scores = useGameStore((s) => s.scores);
   const continueAfterReveal = useGameStore((s) => s.continueAfterReveal);
   const exit = useGameStore((s) => s.exit);
-  const arabicOn = useSettingsStore((s) => s.arabic);
 
   const target = result?.target;
   const winnerKey: 'p1' | 'p2' | null =
@@ -105,8 +103,8 @@ export function RevealScreen() {
     const wait = (ms: number) => new Promise<void>((r) => timers.push(setTimeout(r, ms)));
 
     void (async () => {
-      // שלב הלימוד: מקריאים רק בערבית (אם מופעל), אחרת רק בעברית — בלי כפל שפות.
-      await ttsManager.playWord(target.id, arabicOn ? LANG_AR : LANG_HE);
+      // שלב הלימוד: מקריאים את המילה בערבית.
+      await ttsManager.playWord(target.id, LANG_AR);
       if (cancelled) return;
 
       // מכניסים את שני הניקודים מהקצוות
@@ -156,25 +154,23 @@ export function RevealScreen() {
           מוסתרת למספרים כי הספרה כבר מוצגת ב-TargetDisplay. */}
       {target.categoryId !== 'numbers' && (
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {arabicOn && (
-            <motion.button
-              type="button"
-              onClick={() => speak(LANG_AR)}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              dir="rtl"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(34px,6vw,64px)',
-                fontWeight: 700,
-                color: 'var(--c-primary)',
-                padding: 0,
-              }}
-            >
-              {arabicText(target.id, target.he)}
-            </motion.button>
-          )}
+          <motion.button
+            type="button"
+            onClick={() => speak(LANG_AR)}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            dir="rtl"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(34px,6vw,64px)',
+              fontWeight: 700,
+              color: 'var(--c-primary)',
+              padding: 0,
+            }}
+          >
+            {arabicText(target.id, target.he)}
+          </motion.button>
           <motion.button
             type="button"
             onClick={() => speak(LANG_HE)}

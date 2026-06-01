@@ -67,10 +67,6 @@ export function SettingsScreen() {
           <Toggle on={s.sfx.on} onChange={s.setSfxOn} ariaLabel="אפקטים" />
         </Row>
 
-        <Row icon="translate" label="השמעת ערבית" hint="חשיפת המילה בערבית בסוף הסבב">
-          <Toggle on={s.arabic} onChange={s.setArabic} ariaLabel="ערבית" />
-        </Row>
-
         <Row icon="exposure_neg_1" label="הורדת נקודה על טעות" hint="כל טעות מורידה נקודה (אי אפשר לרדת מתחת ל-0)">
           <Toggle on={s.negativeScore} onChange={s.setNegativeScore} ariaLabel="הורדת נקודה על טעות" />
         </Row>

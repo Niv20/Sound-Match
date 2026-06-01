@@ -79,7 +79,6 @@ export const MIN_ACTIVE_ITEMS = 2;
 export const DEFAULT_SETTINGS = {
   music: { on: true, volume: 0.6 },
   sfx: { on: true, volume: 0.85 },
-  arabic: true,
   negativeScore: true,
   /** טעות מרובה: לאחר טעות אפשר לנסות שוב אחרי שנייה (כבוי => נפסל לשארית הסבב) */
   multiMistake: true,
