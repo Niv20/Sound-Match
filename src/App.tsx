@@ -12,6 +12,7 @@ import { CategoryGridScreen } from './screens/CategoryGridScreen';
 import { AnimalSubgroupScreen } from './screens/AnimalSubgroupScreen';
 import { CategoryItemsScreen } from './screens/CategoryItemsScreen';
 import { NumbersRangeScreen } from './screens/NumbersRangeScreen';
+import { GameScreen } from './screens/GameScreen';
 
 /** מסך זמני עד שייבנה. */
 function Placeholder({ name }: { name: string }) {
@@ -39,6 +40,8 @@ function CurrentScreen() {
       return <CategoryItemsScreen key="categoryItems" />;
     case SCREENS.NUMBERS_RANGE:
       return <NumbersRangeScreen key="numbersRange" />;
+    case SCREENS.GAME:
+      return <GameScreen key="game" />;
     default:
       return <Placeholder key={screen} name={screen} />;
   }

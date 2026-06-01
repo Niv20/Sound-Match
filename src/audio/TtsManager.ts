@@ -27,6 +27,12 @@ class TtsManagerImpl {
     return audioEngine.loadBuffer(ttsUrl(id, lang));
   }
 
+  /** משך ההשמעה במילישניות (טוען אם צריך). fallback אם הקובץ חסר. */
+  async durationMs(id: string, lang: Lang): Promise<number> {
+    const buf = await audioEngine.loadBuffer(ttsUrl(id, lang));
+    return buf ? buf.duration * 1000 : TIMINGS.WORD_FALLBACK_DURATION;
+  }
+
   /**
    * משמיע מילה ומחזיר Promise שמסתיים כשההשמעה נגמרת.
    * אם הקובץ חסר — מסתיים אחרי משך ברירת-מחדל (שקט) כדי שהמשחק ימשיך לזרום.
