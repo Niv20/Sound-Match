@@ -13,6 +13,10 @@ import { AnimalSubgroupScreen } from './screens/AnimalSubgroupScreen';
 import { CategoryItemsScreen } from './screens/CategoryItemsScreen';
 import { NumbersRangeScreen } from './screens/NumbersRangeScreen';
 import { GameScreen } from './screens/GameScreen';
+import { RevealScreen } from './screens/RevealScreen';
+import { VictoryScreen } from './screens/VictoryScreen';
+import { SettingsScreen } from './screens/SettingsScreen';
+import { InstructionsScreen } from './screens/InstructionsScreen';
 
 /** מסך זמני עד שייבנה. */
 function Placeholder({ name }: { name: string }) {
@@ -42,6 +46,14 @@ function CurrentScreen() {
       return <NumbersRangeScreen key="numbersRange" />;
     case SCREENS.GAME:
       return <GameScreen key="game" />;
+    case SCREENS.REVEAL:
+      return <RevealScreen key="reveal" />;
+    case SCREENS.VICTORY:
+      return <VictoryScreen key="victory" />;
+    case SCREENS.SETTINGS:
+      return <SettingsScreen key="settings" />;
+    case SCREENS.INSTRUCTIONS:
+      return <InstructionsScreen key="instructions" />;
     default:
       return <Placeholder key={screen} name={screen} />;
   }
