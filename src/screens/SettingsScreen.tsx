@@ -81,12 +81,25 @@ export function SettingsScreen() {
         </Row>
 
         <Row icon="emoji_events" label="יעד ניצחון" hint="כמה נקודות כדי לזכות">
-          <Button variant="soft" icon="remove" onClick={() => s.setWinningScore(s.winningScore - 1)} ariaLabel="הפחת" />
+          <Button
+            variant="soft"
+            icon="remove"
+            onClick={() => s.setWinningScore(s.winningScore - 1)}
+            disabled={s.winningScore <= WINNING_SCORE_MIN}
+            ariaLabel="הפחת"
+          />
           <NumberFlow
             value={s.winningScore}
-            style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 44, textAlign: 'center' }}
+            prefix="נק׳ "
+            style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 88, textAlign: 'center' }}
           />
-          <Button variant="soft" icon="add" onClick={() => s.setWinningScore(s.winningScore + 1)} ariaLabel="הוסף" />
+          <Button
+            variant="soft"
+            icon="add"
+            onClick={() => s.setWinningScore(s.winningScore + 1)}
+            disabled={s.winningScore >= WINNING_SCORE_MAX}
+            ariaLabel="הוסף"
+          />
         </Row>
 
         <Row icon="timer" label="קצב הקראת המילים" hint="כמה שניות בין מילה למילה בסבב">
@@ -94,24 +107,22 @@ export function SettingsScreen() {
             variant="soft"
             icon="remove"
             onClick={() => s.setWordIntervalSec(s.wordIntervalSec - 1)}
+            disabled={s.wordIntervalSec <= WORD_INTERVAL_MIN}
             ariaLabel="הפחת"
           />
           <NumberFlow
             value={s.wordIntervalSec}
-            suffix=" שנ׳"
+            prefix="שנ׳ "
             style={{ fontFamily: 'var(--font-display)', fontSize: 32, color: 'var(--c-primary)', minWidth: 72, textAlign: 'center' }}
           />
           <Button
             variant="soft"
             icon="add"
             onClick={() => s.setWordIntervalSec(s.wordIntervalSec + 1)}
+            disabled={s.wordIntervalSec >= WORD_INTERVAL_MAX}
             ariaLabel="הוסף"
           />
         </Row>
-
-        <div style={{ textAlign: 'center', color: 'var(--c-ink-soft)', fontSize: 13 }}>
-          טווח יעד: {WINNING_SCORE_MIN}–{WINNING_SCORE_MAX} · קצב הקראה: {WORD_INTERVAL_MIN}–{WORD_INTERVAL_MAX} שנ׳
-        </div>
       </div>
     </Screen>
   );
