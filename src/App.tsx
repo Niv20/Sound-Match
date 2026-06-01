@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { SCREENS } from './config/constants';
 import { CATEGORIES } from './config/categories.config';
@@ -6,7 +6,9 @@ import { imageItems } from './data/vocabulary';
 import { useNavStore } from './store/useNavStore';
 import { useAudioSettingsSync } from './hooks/useAudioSettingsSync';
 import { audioEngine } from './audio/AudioEngine';
-import { preloadBoot, preloadIdle } from './audio/preloader';
+import { musicManager } from './audio/MusicManager';
+import { preloadBoot, preloadIdle, preloadAll, type BootProgress } from './audio/preloader';
+import { LoadingScreen } from './screens/LoadingScreen';
 import { HomeScreen } from './screens/HomeScreen';
 import { CategoryGridScreen } from './screens/CategoryGridScreen';
 import { AnimalSubgroupScreen } from './screens/AnimalSubgroupScreen';
@@ -62,11 +64,22 @@ function CurrentScreen() {
 export function App() {
   useAudioSettingsSync();
 
-  // טעינה מקדימה + פתיחת הקשר האודיו במחווה ראשונה
+  const [boot, setBoot] = useState<BootProgress>({ loaded: 0, total: 1 });
+  const [ready, setReady] = useState(false);
+
+  // טעינה מקדימה חוסמת (תמונות + מוזיקה) + פתיחת הקשר האודיו במחווה ראשונה
   useEffect(() => {
     void preloadBoot();
-    const thumbs = CATEGORIES.flatMap((c) => imageItems(c.id).slice(0, 1).map((it) => it.image));
-    preloadIdle(thumbs);
+
+    // לזרוק מוזיקת בית כבר עכשיו — תתחיל להתנגן במגע הראשון של המשתמש
+    void musicManager.toMenuGroup('home');
+    void audioEngine.resume();
+
+    void preloadAll(setBoot).then(() => {
+      setReady(true);
+      const thumbs = CATEGORIES.flatMap((c) => imageItems(c.id).slice(0, 1).map((it) => it.image));
+      preloadIdle(thumbs);
+    });
 
     // נוחות פיתוח: כניסה ישירה למסך לפי hash (למשל #categories)
     if (import.meta.env.DEV && location.hash.slice(1) === 'categories') {
@@ -85,7 +98,11 @@ export function App() {
   return (
     <div style={{ position: 'relative', flex: 1, overflow: 'hidden' }}>
       <AnimatePresence mode="wait">
-        <CurrentScreen />
+        {ready ? (
+          <CurrentScreen />
+        ) : (
+          <LoadingScreen key="loading" loaded={boot.loaded} total={boot.total} />
+        )}
       </AnimatePresence>
     </div>
   );
