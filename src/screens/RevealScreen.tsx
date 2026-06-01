@@ -70,23 +70,25 @@ export function RevealScreen() {
         <TargetDisplay item={target} />
       </div>
 
-      {/* המילה בעברית */}
-      <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px,6vw,64px)', color: 'var(--c-ink)' }}>
-          {target.he}
-        </span>
-        {arabicOn && (
-          <motion.span
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            dir="rtl"
-            style={{ fontSize: 'clamp(26px,4.5vw,44px)', color: 'var(--c-primary)', fontWeight: 700 }}
-          >
-            {arabicText(target.id, target.he)}
-          </motion.span>
-        )}
-      </div>
+      {/* המילה בעברית — מוסתרת למספרים כי הספרה כבר מוצגת ב-TargetDisplay */}
+      {target.categoryId !== 'numbers' && (
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(34px,6vw,64px)', color: 'var(--c-ink)' }}>
+            {target.he}
+          </span>
+          {arabicOn && (
+            <motion.span
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              dir="rtl"
+              style={{ fontSize: 'clamp(26px,4.5vw,44px)', color: 'var(--c-primary)', fontWeight: 700 }}
+            >
+              {arabicText(target.id, target.he)}
+            </motion.span>
+          )}
+        </div>
+      )}
 
       <Button big icon="arrow_back" onClick={continueAfterReveal}>
         הסבב הבא
