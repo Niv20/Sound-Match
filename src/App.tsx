@@ -9,6 +9,9 @@ import { audioEngine } from './audio/AudioEngine';
 import { preloadBoot, preloadIdle } from './audio/preloader';
 import { HomeScreen } from './screens/HomeScreen';
 import { CategoryGridScreen } from './screens/CategoryGridScreen';
+import { AnimalSubgroupScreen } from './screens/AnimalSubgroupScreen';
+import { CategoryItemsScreen } from './screens/CategoryItemsScreen';
+import { NumbersRangeScreen } from './screens/NumbersRangeScreen';
 
 /** מסך זמני עד שייבנה. */
 function Placeholder({ name }: { name: string }) {
@@ -30,6 +33,12 @@ function CurrentScreen() {
       return <HomeScreen key="home" />;
     case SCREENS.CATEGORIES:
       return <CategoryGridScreen key="categories" />;
+    case SCREENS.ANIMAL_SUBGROUP:
+      return <AnimalSubgroupScreen key="animalSubgroup" />;
+    case SCREENS.CATEGORY_ITEMS:
+      return <CategoryItemsScreen key="categoryItems" />;
+    case SCREENS.NUMBERS_RANGE:
+      return <NumbersRangeScreen key="numbersRange" />;
     default:
       return <Placeholder key={screen} name={screen} />;
   }
