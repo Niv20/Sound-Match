@@ -33,8 +33,12 @@ const KEY = process.env.GOOGLE_TTS_KEY;
 const FORCE = process.argv.includes('--force');
 
 function parsePairs(text, keyA, keyB) {
-  // מחלץ זוגות {keyA, keyB} מתוך JSON/אובייקטים בקובץ TS
-  const re = new RegExp(`"${keyA}":\\s*"([^"]+)"[\\s\\S]*?"${keyB}":\\s*"([^"]+)"`, 'g');
+  // מחלץ זוגות {keyA, keyB} מתוך JSON/אובייקטים בקובץ TS.
+  // תומך גם במפתחות ללא מרכאות וגם בערכים במרכאות בודדות (colors.ts כתוב ידנית).
+  const re = new RegExp(
+    `["']?${keyA}["']?\\s*:\\s*["']([^"']+)["'][\\s\\S]*?["']?${keyB}["']?\\s*:\\s*["']([^"']+)["']`,
+    'g',
+  );
   return [...text.matchAll(re)].map((m) => ({ [keyA]: m[1], [keyB]: m[2] }));
 }
 
