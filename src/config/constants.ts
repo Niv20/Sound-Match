@@ -75,10 +75,17 @@ export const SCORING = {
 /** מינימום פריטים פעילים בקטגוריה כדי שניתן יהיה לשחק */
 export const MIN_ACTIVE_ITEMS = 2;
 
+/**
+ * הנמכת מוזיקה במהלך סבב: בזמן שמקריאים את המילים מנמיכים את המוזיקה ב-10%
+ * נוספים (מ-volume שהוגדר), וכשיש תשובה סופית מגבירים חזרה לעוצמת ההגדרות.
+ * 0.9 = 90% מעוצמת המוזיקה שהוגדרה (הנמכה של 10%).
+ */
+export const MUSIC_ROUND_DUCK = 0.9;
+
 /** ברירות מחדל להגדרות (נשמרות ב-localStorage) */
 export const DEFAULT_SETTINGS = {
-  music: { on: true, volume: 0.6 },
-  sfx: { on: true, volume: 0.85 },
+  music: { on: true, volume: 0.3 },
+  sfx: { on: true, volume: 0.5 },
   negativeScore: true,
   /** טעות מרובה: לאחר טעות אפשר לנסות שוב אחרי שנייה (כבוי => נפסל לשארית הסבב) */
   multiMistake: true,

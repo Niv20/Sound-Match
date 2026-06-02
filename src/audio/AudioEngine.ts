@@ -18,8 +18,10 @@ class AudioEngineImpl {
   private pending = new Map<string, Promise<AudioBuffer | null>>();
 
   /** רמות ווליום בסיס (0..1) לכל ערוץ — מעודכן מההגדרות. */
-  private volumes: Record<AudioChannel, number> = { music: 0.6, sfx: 0.85, tts: 1 };
+  private volumes: Record<AudioChannel, number> = { music: 0.3, sfx: 0.5, tts: 1 };
   private enabled: Record<AudioChannel, boolean> = { music: true, sfx: true, tts: true };
+  /** מקדם הנמכה זמני (0..1) על-גבי עוצמת הבסיס — למשל הנמכת מוזיקה בזמן סבב. */
+  private duck: Record<AudioChannel, number> = { music: 1, sfx: 1, tts: 1 };
 
   /** מאותחל בעצלתיים — חובה בתוך מחווה של המשתמש (autoplay policy). */
   ensure(): AudioContext {
@@ -74,9 +76,15 @@ class AudioEngineImpl {
     if (this.ctx) this.applyChannel(channel);
   }
 
+  /** קובע מקדם הנמכה זמני (0..1) על-גבי עוצמת הבסיס של הערוץ (1 = ללא הנמכה). */
+  setDuck(channel: AudioChannel, factor: number) {
+    this.duck[channel] = Math.max(0, Math.min(1, factor));
+    if (this.ctx) this.applyChannel(channel);
+  }
+
   private applyChannel(channel: AudioChannel) {
     const node = this.master(channel);
-    const target = this.enabled[channel] ? this.volumes[channel] : 0;
+    const target = this.enabled[channel] ? this.volumes[channel] * this.duck[channel] : 0;
     node.gain.setTargetAtTime(target, this.now, 0.04);
   }
 

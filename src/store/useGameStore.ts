@@ -1,8 +1,9 @@
 import { create } from 'zustand';
-import { SCREENS, TIMINGS, SCORING, PLAYER1, PLAYER2, type PlayerId } from '../config/constants';
+import { SCREENS, TIMINGS, SCORING, MUSIC_ROUND_DUCK, PLAYER1, PLAYER2, type PlayerId } from '../config/constants';
 import { useNavStore } from './useNavStore';
 import { useSettingsStore } from './useSettingsStore';
 import { preloadForCategory } from '../audio/preloader';
+import { audioEngine } from '../audio/AudioEngine';
 import { ttsManager } from '../audio/TtsManager';
 import { musicManager } from '../audio/MusicManager';
 import { sfxManager } from '../audio/SfxManager';
@@ -110,6 +111,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   startRound: () => {
     clearTimers();
     resumeReading(); // אתחל את שער ההקראה (לא מושהה) לתחילת סבב חדש
+    // הנמכת המוזיקה ב-10% במהלך הסבב (המילים נשמעות ברור יותר); מוחזר בסיום הסבב.
+    audioEngine.setDuck('music', MUSIC_ROUND_DUCK);
     const myToken = ++ctl.token;
     const { pool, lastResult } = get();
     const plan = buildRound(pool, lastResult?.target.id);
@@ -230,6 +233,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   exit: () => {
     clearTimers();
     resumeReading(); // שחרר לולאת הקראה שעלולה להמתין מושהית
+    audioEngine.setDuck('music', 1); // ביטול הנמכת הסבב ביציאה
     ctl.token++;
     set({
       phase: 'idle',
@@ -256,6 +260,8 @@ function penalize(player: PlayerId) {
 function resolveRound(reason: RoundReason, winner: PlayerId | null) {
   clearTimers();
   resumeReading(); // שחרר לולאת הקראה שעלולה להמתין מושהית כדי שתסיים בבדיקת stale
+  // תשובה סופית — מגבירים את המוזיקה חזרה לעוצמה שהוגדרה בהגדרות.
+  audioEngine.setDuck('music', 1);
   const target = useGameStore.getState().target!;
   useGameStore.setState({ phase: 'resolved' });
 
