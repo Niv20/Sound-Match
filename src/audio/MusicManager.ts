@@ -1,19 +1,22 @@
 /* ===========================================================================
-   MusicManager — מוזיקת רקע מבוססת לופים.
+   MusicManager — מוזיקת רקע מבוססת לופים (אורכים חופשיים).
 
    רעיון הליבה:
-   • כל הלופים באורך זהה L = MUSIC_LOOP_SECONDS.
-   • "מיקום בלופ" נמדד מול שעון ה-AudioContext: pos = (now - virtualStart) % L.
-   • מעבר בין קבוצות (crossfade מסונכרן-פאזה): מתחילים את הלופ החדש מאותו
-     pos של הישן, ובו-זמנית מנמיכים את הישן ומגבירים את החדש.
-   • בתוך קבוצה עם כמה קבצים — קופצים אקראית מקובץ לקובץ בכל מחזור לופ,
-     בצורה חלקה (chaining מתוזמן לפי שעון האודיו).
+   • אורך כל לופ נגזר אוטומטית מהקובץ (AudioBuffer.duration) — לא מוגדר מראש,
+     והלופים יכולים להיות באורכים שונים זה מזה.
+   • "עוגן" (anchor) = שעון ה-AudioContext שבו המוזיקה התחילה (מתוך שקט).
+     "מיקום הפאזה" של לופ באורך d הוא (now - anchor) % d — כמה זמן חלף
+     מההתחלה, מודולו אורך הלופ.
+   • מעבר בין קבוצות (crossfade): הסגמנט הראשון של הקבוצה החדשה מתחיל
+     ממיקום-הפאזה שלו, ובו-זמנית מנמיכים את הישן ומגבירים את החדש.
+   • בתוך קבוצה עם כמה קבצים — בכל מחזור-לופ נבחר קובץ אקראית, והם משורשרים
+     חלק (chaining מתוזמן לפי שעון האודיו), כל אחד באורכו-שלו.
    =========================================================================== */
 
 import { audioEngine } from './AudioEngine';
 import {
-  MUSIC_LOOP_SECONDS as L,
   MUSIC_CROSSFADE_SECONDS as CF,
+  MUSIC_SILENT_SEGMENT_SECONDS as SILENT_SEGMENT,
   MENU_MUSIC,
   GAME_MUSIC_TIERS,
   musicUrl,
@@ -27,61 +30,58 @@ type LoopProvider = () => AudioBuffer | null;
 const SCHEDULE_LOOKAHEAD = 0.25;
 
 /**
- * ערוץ מוזיקה בודד: מנגן רצף לופים מ-provider, חלק ומחזורי,
- * עם GainNode משלו (ל-crossfade). מסנכרן פאזה מול שעון משותף.
+ * ערוץ מוזיקה בודד: מנגן רצף לופים מ-provider, חלק ומחזורי, באורכים חופשיים,
+ * עם GainNode משלו (ל-crossfade). הסגמנט הראשון מסונכרן-פאזה מול עוגן משותף.
  */
 class MusicChannel {
   readonly gain: GainNode;
-  private virtualStart = 0; // זמן ctx שבו pos=0 (מסונכרן בין ערוצים)
   private timer: ReturnType<typeof setTimeout> | null = null;
   private sources: AudioBufferSourceNode[] = [];
   private stopped = false;
 
-  constructor(private provider: LoopProvider) {
+  /** @param anchor שעון ctx שבו pos=0 (מתחילת המוזיקה), לחישוב הפאזה. */
+  constructor(private provider: LoopProvider, private anchor: number) {
     const ctx = audioEngine.context;
     this.gain = ctx.createGain();
     this.gain.gain.value = 0;
     this.gain.connect(audioEngine.master('music'));
   }
 
-  /** מיקום נוכחי בתוך הלופ (0..L), מסונכרן בין ערוצים. */
-  position(): number {
-    const t = audioEngine.now - this.virtualStart;
-    return ((t % L) + L) % L;
+  /** מתחיל ניגון; הסגמנט הראשון מתחיל ממיקום-הפאזה. */
+  start() {
+    this.scheduleSegment(audioEngine.context.currentTime, true);
   }
 
-  /** מתחיל ניגון מ-offset נתון (לסנכרון פאזה). */
-  start(offset: number) {
-    const ctx = audioEngine.context;
-    this.virtualStart = ctx.currentTime - offset;
-    this.scheduleSegment(ctx.currentTime, offset);
-  }
-
-  private scheduleSegment(when: number, offset: number) {
+  private scheduleSegment(when: number, first: boolean) {
     if (this.stopped) return;
     const buf = this.provider();
-    // משך הסגמנט: עד סוף הלופ (L). אם יש buffer ננגן אותו, אחרת שקט.
-    const segDuration = Math.max(0.05, L - offset);
+    let segDuration: number;
 
     if (buf) {
+      const dur = buf.duration;
+      // הסגמנט הראשון מתחיל ממיקום-הפאזה: הזמן שחלף מההתחלה, מודולו אורך
+      // הלופ הזה. שאר הסגמנטים מתחילים מ-0 (שרשור חלק רצוף).
+      const offset = first ? (((when - this.anchor) % dur) + dur) % dur : 0;
       const ctx = audioEngine.context;
       const src = ctx.createBufferSource();
       src.buffer = buf;
       src.connect(this.gain);
-      const playOffset = Math.min(offset, Math.max(0, buf.duration - 0.001));
-      src.start(when, playOffset);
-      src.stop(when + segDuration);
+      src.start(when, offset);
       src.onended = () => {
         const i = this.sources.indexOf(src);
         if (i >= 0) this.sources.splice(i, 1);
       };
       this.sources.push(src);
+      segDuration = dur - offset; // עד סוף הקובץ
+    } else {
+      // קובץ חסר (placeholder) — סגמנט שקט קצר ואז ננסה שוב. לא שובר את האפליקציה.
+      segDuration = SILENT_SEGMENT;
     }
 
     // תזמן את הסגמנט הבא (offset=0) קצת לפני שהנוכחי נגמר
     const nextWhen = when + segDuration;
     const delayMs = Math.max(0, (nextWhen - SCHEDULE_LOOKAHEAD - audioEngine.now) * 1000);
-    this.timer = setTimeout(() => this.scheduleSegment(nextWhen, 0), delayMs);
+    this.timer = setTimeout(() => this.scheduleSegment(nextWhen, false), delayMs);
   }
 
   /** עליה הדרגתית ל-1. */
@@ -131,6 +131,8 @@ function pickRandom<T>(arr: T[]): T | undefined {
 class MusicManagerImpl {
   private active: MusicChannel | null = null;
   private currentKey: string | null = null;
+  /** עוגן הפאזה: ctx-time שבו המוזיקה התחילה. נקבע כשמתחילים מתוך שקט. */
+  private anchor = 0;
 
   /** מעבר לקבוצת מוזיקת תפריט (crossfade מסונכרן-פאזה). */
   async toMenuGroup(group: MenuMusicGroup) {
@@ -171,9 +173,10 @@ class MusicManagerImpl {
   }
 
   private crossfadeTo(provider: LoopProvider, key: string) {
-    const offset = this.active ? this.active.position() : 0;
-    const next = new MusicChannel(provider);
-    next.start(offset);
+    // עוגן הפאזה נקבע כשמתחילים מתוך שקט, ונשמר לאורך כל מעברי התפריט (רצף).
+    if (!this.active) this.anchor = audioEngine.now;
+    const next = new MusicChannel(provider, this.anchor);
+    next.start();
     next.fadeIn();
 
     if (this.active) this.active.fadeOutAndStop();
@@ -181,7 +184,7 @@ class MusicManagerImpl {
     this.currentKey = key;
   }
 
-  /** עצירה מוחלטת (יציאה מהמשחק וכו'). */
+  /** עצירה מוחלטת (יציאה מהמשחק וכו'). העוגן יתאפס בהשמעה הבאה. */
   stopAll() {
     if (this.active) this.active.fadeOutAndStop();
     this.active = null;

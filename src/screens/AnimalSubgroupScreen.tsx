@@ -9,7 +9,7 @@ import { useScreenMusic } from '../hooks/useScreenMusic';
 import { useSfx } from '../hooks/useSfx';
 
 export function AnimalSubgroupScreen() {
-  useScreenMusic('instructions');
+  useScreenMusic('category'); // 3a/3b — אחרי בחירת קטגוריה
   const sfx = useSfx();
   const cat = CATEGORY_BY_ID['animals'];
   const selectSubgroup = useNavStore((s) => s.selectSubgroup);

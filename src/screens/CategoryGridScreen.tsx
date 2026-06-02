@@ -8,7 +8,7 @@ import { useScreenMusic } from '../hooks/useScreenMusic';
 import { useSfx } from '../hooks/useSfx';
 
 export function CategoryGridScreen() {
-  useScreenMusic('home');
+  useScreenMusic('instructions'); // שיר 2 — מסך אחרי "התחל"
   const selectCategory = useNavStore((s) => s.selectCategory);
   const goHome = useNavStore((s) => s.goHome);
   const sfx = useSfx();

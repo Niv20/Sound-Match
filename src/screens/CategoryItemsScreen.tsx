@@ -14,7 +14,7 @@ import { useScreenMusic } from '../hooks/useScreenMusic';
 import { useSfx } from '../hooks/useSfx';
 
 export function CategoryItemsScreen() {
-  useScreenMusic('instructions');
+  useScreenMusic('category'); // 3a/3b — אחרי בחירת קטגוריה
   const sfx = useSfx();
   const categoryId = useNavStore((s) => s.categoryId)!;
   const subgroup = useNavStore((s) => s.subgroup);

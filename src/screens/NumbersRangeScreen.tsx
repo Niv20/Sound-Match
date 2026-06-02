@@ -47,7 +47,7 @@ function Stepper({
 }
 
 export function NumbersRangeScreen() {
-  useScreenMusic('instructions');
+  useScreenMusic('category'); // 3a/3b — אחרי בחירת קטגוריה
   const openCategories = useNavStore((s) => s.openCategories);
   const saved = useSelectionStore((s) => s.numberRange);
   const setNumberRange = useSelectionStore((s) => s.setNumberRange);
