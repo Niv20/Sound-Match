@@ -80,6 +80,10 @@ export function SettingsScreen() {
           <Toggle on={s.multiMistake} onChange={s.setMultiMistake} ariaLabel="טעות מרובה" />
         </Row>
 
+        <Row icon="fast_forward" label="מעבר אוטומטי בין סבבים" hint="כפתור ההמשך מתמלא וממשיך לבד אחרי 3 שניות">
+          <Toggle on={s.autoAdvance} onChange={s.setAutoAdvance} ariaLabel="מעבר אוטומטי בין סבבים" />
+        </Row>
+
         <Row icon="emoji_events" label="יעד ניצחון" hint="כמה נקודות כדי לזכות">
           <Button
             variant="soft"

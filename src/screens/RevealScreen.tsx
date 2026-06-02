@@ -4,8 +4,9 @@ import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
 import { PlayerPanel } from '../components/PlayerPanel';
 import { TargetDisplay } from '../components/TargetDisplay';
-import { LANG_HE, LANG_AR, PLAYER1, PLAYER2, SIDES, SCORING, type PlayerId, type Lang } from '../config/constants';
+import { LANG_HE, LANG_AR, PLAYER1, PLAYER2, SIDES, SCORING, TIMINGS, type PlayerId, type Lang } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
+import { useSettingsStore } from '../store/useSettingsStore';
 import { ttsManager } from '../audio/TtsManager';
 import { arabicText } from '../data/arabic';
 import { useSfx } from '../hooks/useSfx';
@@ -83,6 +84,7 @@ export function RevealScreen() {
   const scores = useGameStore((s) => s.scores);
   const continueAfterReveal = useGameStore((s) => s.continueAfterReveal);
   const exit = useGameStore((s) => s.exit);
+  const autoAdvance = useSettingsStore((s) => s.autoAdvance);
 
   const target = result?.target;
   const winnerKey: 'p1' | 'p2' | null =
@@ -210,7 +212,13 @@ export function RevealScreen() {
         <AnimatePresence>
           {step === 'done' && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-              <Button big icon="arrow_back" onClick={continueAfterReveal}>
+              <Button
+                big
+                icon="arrow_back"
+                onClick={continueAfterReveal}
+                autoFillMs={autoAdvance ? TIMINGS.AUTO_ADVANCE : undefined}
+                onAutoFillComplete={autoAdvance ? continueAfterReveal : undefined}
+              >
                 הסבב הבא
               </Button>
             </motion.div>

@@ -15,6 +15,10 @@ interface ButtonProps {
   silent?: boolean; // אל תשמיע אפקט לחיצה
   style?: React.CSSProperties;
   ariaLabel?: string;
+  /** אם מוגדר — הכפתור מתמלא מימין לשמאל במשך כך וכך מילישניות (מעבר אוטומטי) */
+  autoFillMs?: number;
+  /** נקרא כשהמילוי האוטומטי הסתיים */
+  onAutoFillComplete?: () => void;
 }
 
 const VARIANT_BG: Record<Variant, string> = {
@@ -41,6 +45,8 @@ export function Button({
   silent,
   style,
   ariaLabel,
+  autoFillMs,
+  onAutoFillComplete,
 }: ButtonProps) {
   const sfx = useSfx();
   const fontSize = big ? 26 : 18;
@@ -61,6 +67,8 @@ export function Button({
       whileTap={disabled ? undefined : { y: 2, scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 500, damping: 28 }}
       style={{
+        position: 'relative',
+        overflow: 'hidden',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -79,9 +87,29 @@ export function Button({
         ...style,
       }}
     >
-      {icon && <Icon name={icon} size={fontSize + 6} />}
-      {children}
-      {iconRight && <Icon name={iconRight} size={fontSize + 6} />}
+      {/* מילוי אוטומטי: מתמלא מהקצה הימני שמאלה (RTL) במשך autoFillMs ואז מפעיל המשך */}
+      {autoFillMs != null && (
+        <motion.span
+          initial={{ width: '0%' }}
+          animate={{ width: '100%' }}
+          transition={{ duration: autoFillMs / 1000, ease: 'linear' }}
+          onAnimationComplete={onAutoFillComplete}
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            right: 0,
+            background: 'var(--c-primary-dark)',
+            zIndex: 0,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <span style={{ position: 'relative', zIndex: 1, display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+        {icon && <Icon name={icon} size={fontSize + 6} />}
+        {children}
+        {iconRight && <Icon name={iconRight} size={fontSize + 6} />}
+      </span>
     </motion.button>
   );
 }

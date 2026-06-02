@@ -15,6 +15,7 @@ interface SettingsState {
   multiMistake: boolean;
   winningScore: number;
   wordIntervalSec: number;
+  autoAdvance: boolean;
 
   setMusicOn: (on: boolean) => void;
   setMusicVolume: (v: number) => void;
@@ -24,6 +25,7 @@ interface SettingsState {
   setMultiMistake: (on: boolean) => void;
   setWinningScore: (n: number) => void;
   setWordIntervalSec: (n: number) => void;
+  setAutoAdvance: (on: boolean) => void;
 }
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
@@ -37,6 +39,7 @@ export const useSettingsStore = create<SettingsState>()(
       multiMistake: DEFAULT_SETTINGS.multiMistake,
       winningScore: DEFAULT_SETTINGS.winningScore,
       wordIntervalSec: DEFAULT_SETTINGS.wordIntervalSec,
+      autoAdvance: DEFAULT_SETTINGS.autoAdvance,
 
       setMusicOn: (on) => set((s) => ({ music: { ...s.music, on } })),
       setMusicVolume: (v) => set((s) => ({ music: { ...s.music, volume: clamp01(v) } })),
@@ -48,6 +51,7 @@ export const useSettingsStore = create<SettingsState>()(
         set({ winningScore: Math.max(WINNING_SCORE_MIN, Math.min(WINNING_SCORE_MAX, Math.round(n))) }),
       setWordIntervalSec: (n) =>
         set({ wordIntervalSec: Math.max(WORD_INTERVAL_MIN, Math.min(WORD_INTERVAL_MAX, Math.round(n))) }),
+      setAutoAdvance: (on) => set({ autoAdvance: on }),
     }),
     { name: 'sound-match-settings' },
   ),
