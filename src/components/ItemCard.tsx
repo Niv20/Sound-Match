@@ -53,12 +53,14 @@ export function ItemCard({ item, active, onToggle }: Props) {
           <img
             src={item.image}
             alt={stripNikud(item.he)}
+            decoding="async"
+            draggable={false}
             style={{
               position: 'absolute',
-              top: '6%',
-              left: '6%',
-              width: '88%',
-              height: '88%',
+              top: '10%',
+              left: '10%',
+              width: '80%',
+              height: '80%',
               objectFit: 'contain',
             }}
           />

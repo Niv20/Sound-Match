@@ -14,28 +14,35 @@ import { imageItems } from '../data/vocabulary';
 import { LANG_HE, LANG_AR } from '../config/constants';
 import type { VocabItem } from '../data/types';
 
-const imageCache = new Set<string>();
+/* שומרים הפניה לאובייקטי Image (לא רק את ה-URL) כדי שה-bitmap המפוענח יישאר
+   בזיכרון ולא ייאסף ע"י ה-GC. כך התמונות לא צריכות פענוח מחדש בגלילה מהירה. */
+const imageCache = new Map<string, HTMLImageElement>();
 
-/** טעינה מקדימה של תמונות (decode ברקע). */
+/** טעינה מקדימה של תמונות + פענוח מוקדם (decode), עם שמירת הפניה. */
 export function preloadImages(urls: (string | undefined)[]) {
   for (const url of urls) {
     if (!url || imageCache.has(url)) continue;
-    imageCache.add(url);
     const img = new Image();
     img.decoding = 'async';
     img.src = url;
+    imageCache.set(url, img);
+    void img.decode?.().catch(() => {});
   }
 }
 
-/** טוען תמונה אחת; מסתיים (resolve) גם בהצלחה וגם בכישלון — לעולם לא זורק. */
+/** טוען+מפענח תמונה אחת ושומר הפניה; מסתיים גם בהצלחה וגם בכישלון — לעולם לא זורק. */
 function loadImage(url: string): Promise<void> {
   return new Promise((resolve) => {
     if (imageCache.has(url)) return resolve();
-    imageCache.add(url);
     const img = new Image();
     img.decoding = 'async';
+    imageCache.set(url, img);
     const done = () => resolve();
-    img.onload = done;
+    img.onload = () => {
+      // מפענחים מראש כדי שהציור למסך יהיה מיידי בזמן גלילה
+      if (img.decode) img.decode().then(done, done);
+      else done();
+    };
     img.onerror = done;
     img.src = url;
   });

@@ -56,9 +56,9 @@ export function InstructionsScreen() {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gridTemplateColumns: '1fr',
           gap: 14,
-          maxWidth: 900,
+          maxWidth: 560,
           margin: '0 auto',
           width: '100%',
         }}

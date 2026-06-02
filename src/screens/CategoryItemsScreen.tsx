@@ -71,12 +71,26 @@ export function CategoryItemsScreen() {
         </div>
 
         {/* רשת פריטים */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: 4 }}>
+        <div
+          style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            overscrollBehavior: 'contain',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarGutter: 'stable',
+          }}
+        >
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
               gap: 'clamp(8px,1.4vw,16px)',
+              maxWidth: 660,
+              width: '100%',
+              margin: 'auto',
             }}
           >
             {items.map((it) => (
