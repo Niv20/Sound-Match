@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#7c5cff"/>
-  <path d="M22 20v18a6 6 0 1 1-4-5.66V16l24-4v22a6 6 0 1 1-4-5.66V14z" fill="#ffc83d"/>
+  <rect width="64" height="64" rx="16" fill="#3a2b5c"/>
+  <!-- אקולייזר ממוּראה: צד שמאל כחול, צד ימין ירוק — שני צדדים תואמים = Match -->
+  <g>
+    <rect x="6.5" y="26" width="6" height="12" rx="3" fill="#2f7bff"/>
+    <rect x="15.5" y="22" width="6" height="20" rx="3" fill="#2f7bff"/>
+    <rect x="24.5" y="17" width="6" height="30" rx="3" fill="#2f7bff"/>
+    <rect x="33.5" y="17" width="6" height="30" rx="3" fill="#22c55e"/>
+    <rect x="42.5" y="22" width="6" height="20" rx="3" fill="#22c55e"/>
+    <rect x="51.5" y="26" width="6" height="12" rx="3" fill="#22c55e"/>
+  </g>
 </svg>

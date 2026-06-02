@@ -1,5 +1,7 @@
+import { motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { BrandTitle } from '../components/BrandTitle';
+import { Icon } from '../components/Icon';
 
 interface LoadingScreenProps {
   loaded: number;
@@ -14,32 +16,42 @@ export function LoadingScreen({ loaded, total }: LoadingScreenProps) {
     <Screen style={{ justifyContent: 'center', alignItems: 'center', gap: 'clamp(20px, 5vh, 48px)' }}>
       <BrandTitle />
 
-      <div style={{ display: 'grid', gap: 16, width: '100%', maxWidth: 420, placeItems: 'center' }}>
+      <div style={{ display: 'grid', gap: 24, width: '100%', maxWidth: 420, placeItems: 'center' }}>
+        {/* תו מוזיקלי פועם בתוך עיגול שגדל ומתכווץ בקצב */}
+        <motion.div
+          animate={{ scale: [1, 1.14, 1] }}
+          transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            width: 'clamp(96px, 22vw, 132px)',
+            height: 'clamp(96px, 22vw, 132px)',
+            borderRadius: '50%',
+            display: 'grid',
+            placeItems: 'center',
+            background: 'linear-gradient(135deg, var(--c-player1), var(--c-player2))',
+            boxShadow: '0 10px 0 rgba(58,43,92,0.16), 0 18px 32px rgba(58,43,92,0.22)',
+          }}
+        >
+          <motion.div
+            animate={{ rotate: [-6, 6, -6] }}
+            transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ display: 'grid', placeItems: 'center' }}
+          >
+            <Icon name="music_note" size={64} style={{ color: '#fff' }} />
+          </motion.div>
+        </motion.div>
+
         <p style={{ margin: 0, color: 'var(--c-ink-soft)', fontSize: 'clamp(16px, 2.4vw, 22px)', fontWeight: 700 }}>
           נא להמתין, טוען תמונות וצלילים…
         </p>
 
-        <div
+        <span
           style={{
-            width: '100%',
-            height: 14,
-            borderRadius: 999,
-            background: 'rgba(58,43,92,0.12)',
-            overflow: 'hidden',
+            color: 'var(--c-ink)',
+            fontVariantNumeric: 'tabular-nums',
+            fontWeight: 800,
+            fontSize: 'clamp(22px, 3.4vw, 30px)',
           }}
         >
-          <div
-            style={{
-              width: `${pct}%`,
-              height: '100%',
-              borderRadius: 999,
-              background: 'linear-gradient(120deg, var(--c-primary), var(--c-accent))',
-              transition: 'width 0.25s ease',
-            }}
-          />
-        </div>
-
-        <span style={{ color: 'var(--c-ink-soft)', fontVariantNumeric: 'tabular-nums', fontWeight: 700 }}>
           {pct}%
         </span>
       </div>
