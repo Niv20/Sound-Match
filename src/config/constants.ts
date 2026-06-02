@@ -4,12 +4,12 @@
    =========================================================================== */
 
 /** מקשי השחקנים */
-export const KEY_P1 = 'd'; // צד ימין (כחול)
-export const KEY_P2 = 'a'; // צד שמאל (ירוק)
+export const KEY_P1 = "d"; // צד ימין (כחול)
+export const KEY_P2 = "a"; // צד שמאל (ירוק)
 
 /** זיהוי שחקנים */
-export const PLAYER1 = 'p1' as const;
-export const PLAYER2 = 'p2' as const;
+export const PLAYER1 = "p1" as const;
+export const PLAYER2 = "p2" as const;
 export type PlayerId = typeof PLAYER1 | typeof PLAYER2;
 
 /* ===========================================================================
@@ -22,24 +22,24 @@ export type PlayerId = typeof PLAYER1 | typeof PLAYER2;
 export const SIDES = {
   [PLAYER1]: {
     /** צד פיזי במסך (RTL: השחקן הראשון נמצא מימין) */
-    edge: 'right' as const,
+    edge: "right" as const,
     /** התו של הצד — כרגע אות המקש (נשאר כפי שהיה) */
     symbol: KEY_P1,
     /** משתנה הצבע של הצד */
-    color: 'var(--c-player1)',
-    colorDark: 'var(--c-player1-dark)',
+    color: "var(--c-player1)",
+    colorDark: "var(--c-player1-dark)",
     /** הילה בהירה (זוהר ניצחון) */
-    glow: '#9dc0ff',
+    glow: "#9dc0ff",
     /** שם הצבע בעברית (לכותרות "השחקן ה___") */
-    colorWord: 'כחול',
+    colorWord: "כחול",
   },
   [PLAYER2]: {
-    edge: 'left' as const,
+    edge: "left" as const,
     symbol: KEY_P2,
-    color: 'var(--c-player2)',
-    colorDark: 'var(--c-player2-dark)',
-    glow: '#9be7c4',
-    colorWord: 'ירוק',
+    color: "var(--c-player2)",
+    colorDark: "var(--c-player2-dark)",
+    glow: "#9be7c4",
+    colorWord: "ירוק",
   },
 } as const;
 
@@ -85,8 +85,8 @@ export const DEFAULT_SETTINGS = {
   winningScore: 5,
   /** מרווח (בשניות) בין סוף מילה מושמעת בסבב להתחלת הבאה */
   wordIntervalSec: 2,
-  /** מעבר אוטומטי בין סבבים: כפתור "הסבב הבא" מתמלא וממשיך לבד (כבוי כברירת מחדל) */
-  autoAdvance: false,
+  /** מעבר אוטומטי בין סבבים: כפתור "הסבב הבא" מתמלא וממשיך לבד (דלוק כברירת מחדל) */
+  autoAdvance: true,
 } as const;
 
 /** טווח יעד הניצחון שניתן לבחור בהגדרות */
@@ -105,21 +105,21 @@ export const NUMBERS_DEFAULT_MAX = 9;
 
 /** מסכים (state machine) */
 export const SCREENS = {
-  HOME: 'home',
-  CATEGORIES: 'categories',
-  ANIMAL_SUBGROUP: 'animalSubgroup',
-  CATEGORY_ITEMS: 'categoryItems',
-  NUMBERS_RANGE: 'numbersRange',
-  GAME: 'game',
-  REVEAL: 'reveal',
-  VICTORY: 'victory',
-  SETTINGS: 'settings',
-  INSTRUCTIONS: 'instructions',
+  HOME: "home",
+  CATEGORIES: "categories",
+  ANIMAL_SUBGROUP: "animalSubgroup",
+  CATEGORY_ITEMS: "categoryItems",
+  NUMBERS_RANGE: "numbersRange",
+  GAME: "game",
+  REVEAL: "reveal",
+  VICTORY: "victory",
+  SETTINGS: "settings",
+  INSTRUCTIONS: "instructions",
 } as const;
 
 export type ScreenId = (typeof SCREENS)[keyof typeof SCREENS];
 
 /** שפות TTS */
-export const LANG_HE = 'he' as const;
-export const LANG_AR = 'ar' as const;
+export const LANG_HE = "he" as const;
+export const LANG_AR = "ar" as const;
 export type Lang = typeof LANG_HE | typeof LANG_AR;
