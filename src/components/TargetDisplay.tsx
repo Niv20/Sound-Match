@@ -52,12 +52,14 @@ export function TargetDisplay({ item }: { item: VocabItem }) {
         <img
           src={item.image}
           alt=""
+          // התמונה לא נוגעת בקצוות הקופסה — שומרים שוליים שהצל ייכנס בתוכם
+          // ולא ייחתך. יותר מקום למטה כי הצל נופל כלפי מטה.
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
+            top: '4%',
+            left: '6%',
+            width: '88%',
+            height: '84%',
             objectFit: 'contain',
             filter: 'drop-shadow(0 22px 26px rgba(58,43,92,0.4))',
           }}

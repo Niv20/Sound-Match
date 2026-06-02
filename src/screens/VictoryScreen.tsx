@@ -3,7 +3,6 @@ import NumberFlow from '@number-flow/react';
 import { motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
-import { Icon } from '../components/Icon';
 import { PLAYER1, PLAYER2, SIDES } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
 import { useNavStore } from '../store/useNavStore';
@@ -52,14 +51,61 @@ export function VictoryScreen() {
 
       <motion.div
         initial={{ scale: 0, rotate: -30 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 12 }}
+        animate={{ scale: 1, rotate: 0, y: [0, -12, 0] }}
+        transition={{
+          scale: { type: 'spring', stiffness: 200, damping: 12 },
+          rotate: { type: 'spring', stiffness: 200, damping: 12 },
+          y: { duration: 2.4, repeat: Infinity, ease: 'easeInOut' },
+        }}
+        style={{
+          width: 'clamp(170px, 28vw, 240px)',
+          height: 'clamp(170px, 28vw, 240px)',
+          position: 'relative',
+        }}
       >
-        <Icon name="workspace_premium" size={120} style={{ color: 'var(--c-accent)' }} />
+        <img
+          src="/images/ui/trophy.webp"
+          alt=""
+          // שוליים בתוך הקופסה כדי שהצל ייכנס בתוכם ולא ייחתך (יותר למטה — הצל יורד)
+          style={{
+            position: 'absolute',
+            top: '3%',
+            left: '8%',
+            width: '84%',
+            height: '85%',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 22px 26px rgba(58,43,92,0.4))',
+          }}
+        />
       </motion.div>
 
-      <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(34px,6vw,64px)', color }}>
-        {name} ניצח! 🏆
+      <h1
+        style={{
+          margin: 0,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 14,
+          fontFamily: 'var(--font-display)',
+          fontSize: 'clamp(34px,6vw,64px)',
+          color,
+        }}
+      >
+        <motion.img
+          src="/images/ui/crown.webp"
+          alt=""
+          initial={{ scale: 0, rotate: -20 }}
+          animate={{ scale: 1, rotate: [-8, 8, -8] }}
+          transition={{
+            scale: { type: 'spring', stiffness: 220, damping: 14, delay: 0.2 },
+            rotate: { duration: 3, repeat: Infinity, ease: 'easeInOut' },
+          }}
+          style={{
+            width: 'clamp(44px, 7vw, 68px)',
+            height: 'auto',
+            filter: 'drop-shadow(0 6px 8px rgba(58,43,92,0.35))',
+          }}
+        />
+        {name} ניצח!
       </h1>
 
       <div style={{ display: 'flex', gap: 40, alignItems: 'center' }}>

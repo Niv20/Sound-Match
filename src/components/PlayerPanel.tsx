@@ -43,7 +43,13 @@ export function PlayerPanel({ player, score, blocked, won, showScore = true }: P
       {(blocked || won) && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           {blocked && <Icon name="block" size={22} />}
-          {won && <Icon name="emoji_events" size={24} />}
+          {won && (
+            <img
+              src="/images/ui/trophy.webp"
+              alt=""
+              style={{ width: 40, height: 40, objectFit: 'contain', filter: 'drop-shadow(0 4px 6px rgba(58,43,92,0.35))' }}
+            />
+          )}
         </div>
       )}
       {showScore && (
