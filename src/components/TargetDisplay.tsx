@@ -15,13 +15,15 @@ export function TargetDisplay({ item }: { item: VocabItem }) {
       style={{
         width: 'min(46vh, 60vw)',
         height: 'min(46vh, 60vw)',
-        display: 'grid',
-        placeItems: 'center',
+        position: 'relative',
       }}
     >
       {isColor ? (
         <div
           style={{
+            position: 'absolute',
+            top: '11%',
+            left: '11%',
             width: '78%',
             height: '78%',
             borderRadius: '50%',
@@ -33,6 +35,10 @@ export function TargetDisplay({ item }: { item: VocabItem }) {
       ) : isNumber ? (
         <span
           style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'grid',
+            placeItems: 'center',
             fontFamily: 'var(--font-display)',
             fontSize: 'min(40vh, 52vw)',
             lineHeight: 1,
@@ -47,6 +53,9 @@ export function TargetDisplay({ item }: { item: VocabItem }) {
           src={item.image}
           alt=""
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
             width: '100%',
             height: '100%',
             objectFit: 'contain',

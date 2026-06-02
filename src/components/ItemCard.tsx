@@ -43,8 +43,7 @@ export function ItemCard({ item, active, onToggle }: Props) {
           width: '100%',
           aspectRatio: '1 / 1',
           borderRadius: 'var(--r-sm)',
-          display: 'grid',
-          placeItems: 'center',
+          position: 'relative',
           overflow: 'hidden',
           background: isColor ? item.color : 'var(--c-surface-soft)',
           border: lightColor ? '2px solid var(--c-surface-soft)' : 'none',
@@ -54,7 +53,14 @@ export function ItemCard({ item, active, onToggle }: Props) {
           <img
             src={item.image}
             alt={stripNikud(item.he)}
-            style={{ width: '88%', height: '88%', objectFit: 'contain' }}
+            style={{
+              position: 'absolute',
+              top: '6%',
+              left: '6%',
+              width: '88%',
+              height: '88%',
+              objectFit: 'contain',
+            }}
           />
         )}
       </div>
