@@ -71,23 +71,25 @@ export function ItemCard({ item, active, onToggle }: Props) {
         {item.he}
       </span>
 
-      {/* סימון מצב */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 6,
-          insetInlineEnd: 6,
-          width: 26,
-          height: 26,
-          borderRadius: '50%',
-          display: 'grid',
-          placeItems: 'center',
-          background: active ? 'var(--c-accent-2)' : 'rgba(122,108,153,0.25)',
-          color: '#fff',
-        }}
-      >
-        <Icon name={active ? 'check' : 'close'} size={18} />
-      </div>
+      {/* סימון מצב — רק כשנבחר מציגים V ירוק */}
+      {active && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 6,
+            insetInlineEnd: 6,
+            width: 26,
+            height: 26,
+            borderRadius: '50%',
+            display: 'grid',
+            placeItems: 'center',
+            background: 'var(--c-accent-2)',
+            color: '#fff',
+          }}
+        >
+          <Icon name="check" size={18} />
+        </div>
+      )}
     </motion.button>
   );
 }

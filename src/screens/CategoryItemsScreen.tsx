@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import NumberFlow from '@number-flow/react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Screen } from '../components/Screen';
 import { Button } from '../components/Button';
@@ -36,6 +37,7 @@ export function CategoryItemsScreen() {
   );
   const active = activeItems(items, scope, disabled);
   const canPlay = active.length >= MIN_ACTIVE_ITEMS;
+  const allSelected = active.length === items.length;
 
   const subName = subgroup ? cat.subgroups?.find((s) => s.id === subgroup)?.he : null;
 
@@ -60,12 +62,24 @@ export function CategoryItemsScreen() {
           <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(22px,3vw,34px)' }}>
             {subName ?? cat.he}
           </h2>
-          <span style={{ color: 'var(--c-ink-soft)', fontWeight: 700 }}>
-            {active.length}/{items.length}
+          <span
+            style={{
+              color: 'var(--c-ink-soft)',
+              fontWeight: 700,
+              display: 'inline-flex',
+              alignItems: 'center',
+            }}
+          >
+            <NumberFlow value={active.length} />/{items.length}
           </span>
           <div style={{ marginInlineStart: 'auto' }}>
-            <Button variant="soft" icon="select_all" onClick={() => enableAll(scope)}>
-              הפעל הכל
+            <Button
+              variant="soft"
+              icon="select_all"
+              disabled={allSelected}
+              onClick={() => enableAll(scope)}
+            >
+              בחר הכל
             </Button>
           </div>
         </div>
