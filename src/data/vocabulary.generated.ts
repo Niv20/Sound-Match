@@ -599,10 +599,10 @@ export const VOCABULARY: VocabItem[] = [
     "image": "/images/desserts/desserts_mylkshyk.webp"
   },
   {
-    "id": "desserts_nknykh_blchmnyh",
-    "he": "נַקְנִיקָהּ בְּלַחְמָנִיָּה",
+    "id": "desserts_nknykyh_blchmnyh",
+    "he": "נַקְנִיקִיָּה בְּלַחְמָנִיָּה",
     "categoryId": "desserts",
-    "image": "/images/desserts/desserts_nknykh_blchmnyh.webp"
+    "image": "/images/desserts/desserts_nknykyh_blchmnyh.webp"
   },
   {
     "id": "desserts_skryh_al_mkl",

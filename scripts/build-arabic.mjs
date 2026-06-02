@@ -55,7 +55,7 @@ const AR = {
   fruits_tpoz: 'بُرتُقال', fruits_tpoch: 'تُفّاح', fruits_tot: 'فَراولة',
   // קינוחים
   desserts_artyk: 'آيس كريم', desserts_hmborgr: 'هامبرغر', desserts_mylkshyk: 'ميلك شيك',
-  desserts_nknykh_blchmnyh: 'هوت دوغ', desserts_skryh_al_mkl: 'مَصّاصة', desserts_aogyh: 'بِسكويت',
+  desserts_nknykyh_blchmnyh: 'هوت دوغ', desserts_skryh_al_mkl: 'مَصّاصة', desserts_aogyh: 'بِسكويت',
   desserts_aogh: 'كَعكة', desserts_pytzh: 'بيتزا', desserts_popkorn: 'فُشار', desserts_chyps: 'بطاطا مقلية',
   desserts_kolh: 'كولا', desserts_shokold: 'شوكولاتة',
   // צבעים

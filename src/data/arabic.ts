@@ -95,7 +95,7 @@ export const ARABIC: Record<string, string> = {
   "desserts_artyk": "آيس كريم",
   "desserts_hmborgr": "هامبرغر",
   "desserts_mylkshyk": "ميلك شيك",
-  "desserts_nknykh_blchmnyh": "هوت دوغ",
+  "desserts_nknykyh_blchmnyh": "هوت دوغ",
   "desserts_skryh_al_mkl": "مَصّاصة",
   "desserts_aogyh": "بِسكويت",
   "desserts_aogh": "كَعكة",
