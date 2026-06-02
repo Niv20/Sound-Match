@@ -38,6 +38,7 @@ export function GameScreen() {
   useGameMusic('tier1'); //                          לופ הסבב; חוזר מ-tier2 בחשיפה
   const startRound = useGameStore((s) => s.startRound);
   const press = useGameStore((s) => s.press);
+  const release = useGameStore((s) => s.release);
   const target = useGameStore((s) => s.target);
   const flash = useGameStore((s) => s.flash);
 
@@ -55,13 +56,20 @@ export function GameScreen() {
       </AnimatePresence>
 
       {/* אזורי לחיצה שקופים לכל צד (למגע) — ימין=שחקן 1, שמאל=שחקן 2.
+          הורדת אצבע = לחיצה, הרמתה = שחרור (כמו כפתורי החומרה).
           במהלך הסבב לא מציגים פאנלים צבעוניים למעלה. */}
       <div
-        onClick={() => press(PLAYER1)}
+        onPointerDown={() => press(PLAYER1)}
+        onPointerUp={() => release(PLAYER1)}
+        onPointerLeave={() => release(PLAYER1)}
+        onPointerCancel={() => release(PLAYER1)}
         style={{ position: 'absolute', top: 0, bottom: 0, right: 0, width: '50%', zIndex: 1, cursor: 'pointer' }}
       />
       <div
-        onClick={() => press(PLAYER2)}
+        onPointerDown={() => press(PLAYER2)}
+        onPointerUp={() => release(PLAYER2)}
+        onPointerLeave={() => release(PLAYER2)}
+        onPointerCancel={() => release(PLAYER2)}
         style={{ position: 'absolute', top: 0, bottom: 0, left: 0, width: '50%', zIndex: 1, cursor: 'pointer' }}
       />
 
