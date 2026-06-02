@@ -9,6 +9,7 @@ import { useGameStore } from '../store/useGameStore';
 import { ttsManager } from '../audio/TtsManager';
 import { arabicText } from '../data/arabic';
 import { useSfx } from '../hooks/useSfx';
+import { useGameMusic } from '../hooks/useScreenMusic';
 
 /** שלבי החשיפה: קוראים את המילה → מכניסים ניקוד מהקצוות → +1 → כפתור. */
 type RevealStep = 'reading' | 'scores' | 'plus' | 'done';
@@ -77,6 +78,7 @@ function ScoreSide({
 
 export function RevealScreen() {
   const sfx = useSfx();
+  useGameMusic('tier2'); //                          לופ החשיפה; חוזר ל-tier1 בסבב הבא
   const result = useGameStore((s) => s.lastResult);
   const scores = useGameStore((s) => s.scores);
   const continueAfterReveal = useGameStore((s) => s.continueAfterReveal);

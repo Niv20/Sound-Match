@@ -11,6 +11,9 @@
      ממיקום-הפאזה שלו, ובו-זמנית מנמיכים את הישן ומגבירים את החדש.
    • בתוך קבוצה עם כמה קבצים — בכל מחזור-לופ נבחר קובץ אקראית, והם משורשרים
      חלק (chaining מתוזמן לפי שעון האודיו), כל אחד באורכו-שלו.
+   • תפריט ומשחק חולקים את אותו מנגנון: קבוצת תפריט (toMenuGroup) ושלב-משחק
+     (toGameTier) הם שניהם "קבוצת לופים" עם crossfade מסונכרן-פאזה. שלבי
+     המשחק מתחלפים לפי אירוע (tier1=סבב, tier2=חשיפה), לא אוטומטית.
    =========================================================================== */
 
 import { audioEngine } from './AudioEngine';
@@ -18,9 +21,10 @@ import {
   MUSIC_CROSSFADE_SECONDS as CF,
   MUSIC_SILENT_SEGMENT_SECONDS as SILENT_SEGMENT,
   MENU_MUSIC,
-  GAME_MUSIC_TIERS,
+  GAME_MUSIC,
   musicUrl,
   type MenuMusicGroup,
+  type GameMusicTier,
 } from '../config/music.config';
 
 /** ספק הלופ הבא: מחזיר buffer (או null אם חסר/placeholder). */
@@ -136,39 +140,26 @@ class MusicManagerImpl {
 
   /** מעבר לקבוצת מוזיקת תפריט (crossfade מסונכרן-פאזה). */
   async toMenuGroup(group: MenuMusicGroup) {
-    const key = `menu:${group}`;
-    if (key === this.currentKey) return;
-    const urls = (MENU_MUSIC[group] ?? []).map(musicUrl);
-    const buffers = (await Promise.all(urls.map((u) => audioEngine.loadBuffer(u)))).filter(
-      (b): b is AudioBuffer => !!b,
-    );
-    const provider: LoopProvider = () => pickRandom(buffers) ?? null;
-    this.crossfadeTo(provider, key);
+    await this.toLoopGroup(`menu:${group}`, MENU_MUSIC[group] ?? []);
   }
 
-  /** התחלת מוזיקת משחק (שכבות מתקדמות). */
-  async toGame() {
-    const key = 'game';
+  /**
+   * מעבר לשלב מוזיקת משחק (crossfade מסונכרן-פאזה, זהה לתפריט).
+   * tier1 = במהלך הסבב, tier2 = במסך החשיפה. נקרא לפי אירוע מהמסכים.
+   */
+  async toGameTier(tier: GameMusicTier) {
+    await this.toLoopGroup(`game:${tier}`, GAME_MUSIC[tier] ?? []);
+  }
+
+  /** טוען את הלופים של קבוצה ומבצע crossfade מסונכרן-פאזה אליה. */
+  private async toLoopGroup(key: string, relPaths: string[]) {
     if (key === this.currentKey) return;
-
-    // טען מראש את כל ה-buffers של כל השכבות
-    const tierBuffers: (AudioBuffer | null)[][] = await Promise.all(
-      GAME_MUSIC_TIERS.map((t) => Promise.all(t.loops.map((rel) => audioEngine.loadBuffer(musicUrl(rel))))),
-    );
-
-    let tierIndex = 0;
-    let playsInTier = 0;
-    const provider: LoopProvider = () => {
-      const tier = GAME_MUSIC_TIERS[tierIndex];
-      const pool = tierBuffers[tierIndex].filter((b): b is AudioBuffer => !!b);
-      const buf = pickRandom(pool) ?? null;
-      playsInTier++;
-      if (playsInTier >= tier.plays) {
-        tierIndex = (tierIndex + 1) % GAME_MUSIC_TIERS.length;
-        playsInTier = 0;
-      }
-      return buf;
-    };
+    const buffers = (
+      await Promise.all(relPaths.map((rel) => audioEngine.loadBuffer(musicUrl(rel))))
+    ).filter((b): b is AudioBuffer => !!b);
+    // ייתכן שבזמן הטעינה כבר ביקשו קבוצה אחרת — אל תדרוס אותה.
+    if (key === this.currentKey) return;
+    const provider: LoopProvider = () => pickRandom(buffers) ?? null;
     this.crossfadeTo(provider, key);
   }
 

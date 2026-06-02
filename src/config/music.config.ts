@@ -12,11 +12,13 @@
    אם בקבוצה יותר מקובץ אחד — בכל מחזור-לופ נבחר אחד אקראית.
    להוספת לופ: הוסף נתיב למערך. הקבצים: public/audio/music/<path>.
 
-   ── מוזיקת משחק (GAME_MUSIC_TIERS) ──────────────────────────────────────
-   מערך "שכבות" (tiers) מסודר מהתחלה לסוף. כל שכבה:
-     loops: רשימת קבצים (נבחר אקראית בכל מחזור לופ)
-     plays: כמה מחזורי-לופ מנגנים מהשכבה לפני מעבר לשכבה הבאה
-   אחרי השכבה האחרונה — חוזרים לראשונה (מחזורי).
+   ── מוזיקת משחק (GAME_MUSIC) ────────────────────────────────────────────
+   שני "שלבים" שמתחלפים *לפי אירועי המשחק* (לא אוטומטית):
+     tier1 — מתנגן במהלך הסבב (הקראת המילים + ההמתנה ללחיצה).
+     tier2 — מתנגן במסך החשיפה (סוף הסבב / חשיפת התשובה).
+   המעבר ביניהם הוא crossfade מסונכרן-פאזה — בדיוק כמו מוזיקת התפריט,
+   וללא תלות באורך הלופ (האורך נגזר אוטומטית מהקובץ). בכל שלב, אם יש כמה
+   לופים — נבחר אחד אקראית בכל מחזור-לופ. אותו מבנה כמו MENU_MUSIC.
    =========================================================================== */
 
 /** משך ה-crossfade במעבר בין לופים (שניות). */
@@ -38,17 +40,28 @@ export const MENU_MUSIC: Record<string, string[]> = {
 
 export type MenuMusicGroup = keyof typeof MENU_MUSIC;
 
-export interface GameMusicTier {
-  loops: string[];
-  plays: number;
-}
+/** שלבי מוזיקת המשחק. מתחלפים לפי אירוע (ראה הערה למעלה), לא אוטומטית. */
+export const GAME_MUSIC: Record<string, string[]> = {
+  tier1: [
+    //                                                         במהלך הסבב
+    'game/tier1/a1.wav',
+    'game/tier1/a2.wav',
+    'game/tier1/a3.wav',
+    'game/tier1/a4.wav',
+    'game/tier1/a5.wav',
+    'game/tier1/a6.wav',
+  ],
+  tier2: [
+    //                                                       מסך החשיפה
+    'game/tier2/b1.wav',
+    'game/tier2/b2.wav',
+    'game/tier2/b3.wav',
+    'game/tier2/b4.wav',
+    'game/tier2/b5.wav',
+  ],
+};
 
-/** שכבות מוזיקת המשחק (מהרגוע לשיא). */
-export const GAME_MUSIC_TIERS: GameMusicTier[] = [
-  { loops: ['game/tier1/01.mp3', 'game/tier1/02.mp3'], plays: 2 },
-  { loops: ['game/tier2/01.mp3'], plays: 2 },
-  { loops: ['game/tier3/01.mp3', 'game/tier3/02.mp3'], plays: 3 },
-];
+export type GameMusicTier = keyof typeof GAME_MUSIC;
 
 /** עוזר: הופך נתיב יחסי לנתיב מלא. */
 export function musicUrl(relPath: string): string {

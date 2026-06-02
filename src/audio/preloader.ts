@@ -8,7 +8,7 @@
 import { audioEngine } from './AudioEngine';
 import { sfxManager } from './SfxManager';
 import { ttsManager } from './TtsManager';
-import { musicUrl, MENU_MUSIC, GAME_MUSIC_TIERS } from '../config/music.config';
+import { musicUrl, MENU_MUSIC, GAME_MUSIC } from '../config/music.config';
 import { CATEGORIES } from '../config/categories.config';
 import { imageItems } from '../data/vocabulary';
 import { LANG_HE, LANG_AR } from '../config/constants';
@@ -49,11 +49,11 @@ function allImageUrls(): string[] {
   return [...new Set(urls)];
 }
 
-/** כל כתובות המוזיקה (תפריט + שכבות משחק). */
+/** כל כתובות המוזיקה (תפריט + שלבי משחק). */
 function allMusicUrls(): string[] {
   const urls: string[] = [];
   for (const list of Object.values(MENU_MUSIC)) for (const rel of list) urls.push(musicUrl(rel));
-  for (const tier of GAME_MUSIC_TIERS) for (const rel of tier.loops) urls.push(musicUrl(rel));
+  for (const list of Object.values(GAME_MUSIC)) for (const rel of list) urls.push(musicUrl(rel));
   return [...new Set(urls)];
 }
 

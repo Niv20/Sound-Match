@@ -6,6 +6,7 @@ import { PLAYER1, PLAYER2, SIDES, type PlayerId } from '../config/constants';
 import { useGameStore } from '../store/useGameStore';
 import type { SideFx } from '../store/useGameStore';
 import { useGameKeys } from '../hooks/useGameKeys';
+import { useGameMusic } from '../hooks/useScreenMusic';
 
 /** הבזק גרדיאנט על חצי המסך של צד מסוים: צבע הצד לתשובה נכונה, אדום לטעות. */
 function SideFlash({ player, fx }: { player: PlayerId; fx: Exclude<SideFx, null> }) {
@@ -34,6 +35,7 @@ function SideFlash({ player, fx }: { player: PlayerId; fx: Exclude<SideFx, null>
 
 export function GameScreen() {
   useGameKeys();
+  useGameMusic('tier1'); //                          לופ הסבב; חוזר מ-tier2 בחשיפה
   const startRound = useGameStore((s) => s.startRound);
   const press = useGameStore((s) => s.press);
   const target = useGameStore((s) => s.target);

@@ -77,7 +77,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   startMatch: (pool, categoryId, subgroup) => {
     set({ pool, categoryId, subgroup, scores: { p1: 0, p2: 0 }, lastResult: null, phase: 'idle' });
     void preloadForCategory(pool);
-    void musicManager.toGame();
+    // מוזיקת המשחק מונעת מהמסכים: GameScreen→tier1 (סבב), RevealScreen→tier2 (חשיפה).
     useNavStore.getState().go(SCREENS.GAME);
   },
 
