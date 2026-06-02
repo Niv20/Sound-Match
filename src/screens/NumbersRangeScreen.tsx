@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import NumberFlow from '@number-flow/react';
-import { motion } from 'motion/react';
-import { Screen } from '../components/Screen';
-import { Button } from '../components/Button';
-import { Icon } from '../components/Icon';
-import { buildNumberItems, validateRange, clampNumber } from '../data/numbers';
-import { useNavStore } from '../store/useNavStore';
-import { useSelectionStore } from '../store/useSelectionStore';
-import { useGameStore } from '../store/useGameStore';
-import { useScreenMusic } from '../hooks/useScreenMusic';
+import React, { useState, useRef, useEffect } from "react";
+import NumberFlow from "@number-flow/react";
+import { motion } from "motion/react";
+import { Screen } from "../components/Screen";
+import { Button } from "../components/Button";
+import { Icon } from "../components/Icon";
+import { buildNumberItems, validateRange, clampNumber } from "../data/numbers";
+import { useNavStore } from "../store/useNavStore";
+import { useSelectionStore } from "../store/useSelectionStore";
+import { useGameStore } from "../store/useGameStore";
+import { useScreenMusic } from "../hooks/useScreenMusic";
 
 function Stepper({
   label,
@@ -19,35 +19,105 @@ function Stepper({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [editing]);
+
+  const startEdit = () => {
+    setDraft(String(value));
+    setEditing(true);
+  };
+
+  const commitEdit = () => {
+    const parsed = parseInt(draft, 10);
+    onChange(clampNumber(Number.isNaN(parsed) ? value : parsed));
+    setEditing(false);
+  };
+
+  const boxStyle: React.CSSProperties = {
+    width: 110,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: "var(--font-display)",
+    fontSize: 44,
+    color: "var(--c-primary)",
+    background: "var(--c-surface)",
+    border: "3px solid var(--c-surface-soft)",
+    borderRadius: "var(--r-md)",
+    paddingTop: 2,
+    paddingBottom: 2,
+    cursor: "text",
+    overflow: "hidden",
+    direction: "ltr",
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-      <span style={{ fontWeight: 700, color: 'var(--c-ink-soft)' }}>{label}</span>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <Button variant="soft" icon="remove" onClick={() => onChange(clampNumber(value - 1))} ariaLabel="הפחת" />
-        <div
-          style={{
-            width: 110,
-            display: 'grid',
-            placeItems: 'center',
-            fontFamily: 'var(--font-display)',
-            fontSize: 44,
-            color: 'var(--c-primary)',
-            background: 'var(--c-surface)',
-            border: '3px solid var(--c-surface-soft)',
-            borderRadius: 'var(--r-md)',
-            padding: '6px 0',
-          }}
-        >
-          <NumberFlow value={value} />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 10,
+      }}
+    >
+      <span style={{ fontWeight: 700, color: "var(--c-ink-soft)" }}>
+        {label}
+      </span>
+      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+        <Button
+          variant="soft"
+          icon="remove"
+          onClick={() => onChange(clampNumber(value - 1))}
+          ariaLabel="הפחת"
+        />
+        <div style={boxStyle} onClick={!editing ? startEdit : undefined}>
+          {editing ? (
+            <input
+              ref={inputRef}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value.replace(/\D/g, ""))}
+              onBlur={commitEdit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitEdit();
+                if (e.key === "Escape") setEditing(false);
+              }}
+              style={{
+                width: "90%",
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                fontFamily: "var(--font-display)",
+                fontSize: 44,
+                color: "var(--c-primary)",
+                textAlign: "center",
+                padding: 0,
+              }}
+            />
+          ) : (
+            <NumberFlow value={value} />
+          )}
         </div>
-        <Button variant="soft" icon="add" onClick={() => onChange(clampNumber(value + 1))} ariaLabel="הוסף" />
+        <Button
+          variant="soft"
+          icon="add"
+          onClick={() => onChange(clampNumber(value + 1))}
+          ariaLabel="הוסף"
+        />
       </div>
     </div>
   );
 }
 
 export function NumbersRangeScreen() {
-  useScreenMusic('category'); // 3a/3b — אחרי בחירת קטגוריה
+  useScreenMusic("category"); // 3a/3b — אחרי בחירת קטגוריה
   const openCategories = useNavStore((s) => s.openCategories);
   const saved = useSelectionStore((s) => s.numberRange);
   const setNumberRange = useSelectionStore((s) => s.setNumberRange);
@@ -60,28 +130,58 @@ export function NumbersRangeScreen() {
   const start = () => {
     if (!validation.valid) return;
     setNumberRange(min, max);
-    startMatch(buildNumberItems(min, max), 'numbers', null);
+    startMatch(buildNumberItems(min, max), "numbers", null);
   };
 
   return (
-    <Screen style={{ gap: 28, alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ position: 'absolute', top: 'clamp(16px,3vw,40px)', insetInlineStart: 'clamp(16px,3vw,40px)' }}>
-        <Button variant="ghost" icon="arrow_forward" onClick={openCategories} ariaLabel="חזרה" />
+    <Screen style={{ gap: 28, alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(16px,3vw,40px)",
+          insetInlineStart: "clamp(16px,3vw,40px)",
+        }}
+      >
+        <Button
+          variant="ghost"
+          icon="arrow_forward"
+          onClick={openCategories}
+          ariaLabel="חזרה"
+        />
       </div>
 
-      <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 'clamp(24px,4vw,40px)' }}>
+      <h2
+        style={{
+          margin: 0,
+          fontFamily: "var(--font-display)",
+          fontSize: "clamp(24px,4vw,40px)",
+        }}
+      >
         בחרו טווח מספרים
       </h2>
 
-      <div style={{ display: 'flex', gap: 'clamp(24px,6vw,80px)', alignItems: 'flex-start' }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "clamp(24px,6vw,80px)",
+          alignItems: "flex-start",
+        }}
+      >
         <Stepper label="מהמספר" value={min} onChange={setMin} />
-        <span style={{ fontSize: 44, color: 'var(--c-ink-soft)', alignSelf: 'center' }}>–</span>
         <Stepper label="עד המספר" value={max} onChange={setMax} />
       </div>
 
       <div style={{ minHeight: 30 }}>
         {validation.valid ? (
-          <span style={{ color: 'var(--c-accent-2)', fontWeight: 700, display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
+          <span
+            style={{
+              color: "var(--c-accent-2)",
+              fontWeight: 700,
+              display: "inline-flex",
+              alignItems: "baseline",
+              gap: 5,
+            }}
+          >
             <NumberFlow value={max - min + 1} /> מספרים בטווח
           </span>
         ) : (
@@ -89,7 +189,12 @@ export function NumbersRangeScreen() {
             initial={{ x: -6 }}
             animate={{ x: [6, -6, 4, 0] }}
             transition={{ duration: 0.3 }}
-            style={{ color: 'var(--c-danger)', fontWeight: 700, display: 'inline-flex', gap: 6 }}
+            style={{
+              color: "var(--c-danger)",
+              fontWeight: 700,
+              display: "inline-flex",
+              gap: 6,
+            }}
           >
             <Icon name="error" size={22} />
             {validation.message}
@@ -97,7 +202,12 @@ export function NumbersRangeScreen() {
         )}
       </div>
 
-      <Button big icon="sports_esports" disabled={!validation.valid} onClick={start}>
+      <Button
+        big
+        icon="sports_esports"
+        disabled={!validation.valid}
+        onClick={start}
+      >
         התחל משחק
       </Button>
     </Screen>
