@@ -41,7 +41,7 @@ function ScoreSide({
         <PlayerPanel player={player} score={score} blocked={false} won={won && show} />
       </motion.div>
 
-      {/* "+1" מעל התיבה — כחול מימין, ירוק משמאל */}
+      {/* "+1" מעל התיבה — ירוק מימין, כחול משמאל */}
       <AnimatePresence>
         {won && (step === 'plus' || step === 'done') && (
           <div
@@ -191,7 +191,7 @@ export function RevealScreen() {
         </div>
       )}
 
-      {/* ניקוד נכנס מהקצוות: ימין=כחול, שמאל=ירוק */}
+      {/* ניקוד נכנס מהקצוות: ימין=ירוק, שמאל=כחול */}
       <div
         style={{
           position: 'relative',

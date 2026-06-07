@@ -11,11 +11,11 @@
 
   --c-primary: #7c5cff; /* סגול */
   --c-primary-dark: #5b3fd6;
-  /* צבעי הצדדים — מוגדרים מרכזית ב-SIDES (constants.ts). ימין=כחול, שמאל=ירוק. */
-  --c-player1: #2f7bff; /* כחול - צד ימין (שחקן A) */
-  --c-player1-dark: #1a5bd6;
-  --c-player2: #22c55e; /* ירוק - צד שמאל (שחקן L) */
-  --c-player2-dark: #16a34a;
+  /* צבעי הצדדים — מוגדרים מרכזית ב-SIDES (constants.ts). ימין=ירוק, שמאל=כחול. */
+  --c-player1: #22c55e; /* ירוק - צד ימין (מקש D) */
+  --c-player1-dark: #16a34a;
+  --c-player2: #2f7bff; /* כחול - צד שמאל (מקש A) */
+  --c-player2-dark: #1a5bd6;
 
   --c-accent: #ffc83d; /* צהוב */
   --c-accent-2: #36d399; /* ירוק מנטה (accent) */
